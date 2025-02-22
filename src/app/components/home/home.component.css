@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+/* Centrado del login en la pantalla */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+header {
+  background-color: #097887; 
+  padding: 1rem;
+  color: white;
+  border-radius: 30px;
+  font-size: 2rem; /*  Letra del header más grande */
+  text-align: center;
+}
+
+.footer {
+  background-color: #f8f8f8;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+  border-top: 1px solid #ddd;
+}
+
+.developers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  header {
+    font-size: 1.5rem; /* Ajuste del tamaño de letra en pantallas pequeñas */
+  }
+
+  header ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer {
+    font-size: 0.8rem;
+  }
+} 

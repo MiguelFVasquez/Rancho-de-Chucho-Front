@@ -1,12 +1,23 @@
-<header>
-    <p>Bienvenido a Rancho de Chucho</p>
-    <ul>
-        <li> <a routerLink=""> Inicio</a></li>
-        <li> <a routerLink="/login">Log In</a></li>
-        <li> <a routerLink="/register">Registro</a></li>
-    </ul>
-</header>
-<router-outlet></router-outlet>
-<footer>
-    <p>Juan Esteban Miguel</p>
-</footer>
+<header *ngIf="!esLoginPage">
+    <p>Rancho de Chucho</p>
+  </header>
+  
+  <div class="login-container">
+    <app-login></app-login> <!-- 💡 Se carga el login directamente -->
+  </div>
+  <!-- 💡 Footer cargado solo cuando se visualiza -->
+<ng-container *ngIf="!esLoginPage">
+    <ng-template [ngIf]="footerVisible">
+      <footer class="footer">
+        <p><strong>Sistema Point of Service (POS)</strong> para Rancho de Chucho</p>
+        <p><strong>Desarrollado por:</strong></p>
+        <ul class="developers-list">
+          <li>Juan Esteban Cruz Perez</li>
+          <li>Juan Esteban Parra Parra</li>
+          <li>Juan Miguel Florez Vasquez</li>
+        </ul>
+        <p><strong>Universidad del Quindío</strong></p>
+      </footer>
+    </ng-template>
+  </ng-container>
+  
