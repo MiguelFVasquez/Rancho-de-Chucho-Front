@@ -23,7 +23,7 @@ export class HomeComponent {
               private router: Router, 
               private cdr: ChangeDetectorRef,
               @Inject(PLATFORM_ID) private platformId: Object) {
-                
+
     // Suscripción a los eventos del enrutador para detectar cambios en la navegación
     this.router.events.subscribe(event => {
       // Verifica si el evento es una instancia de NavigationEnd (cuando la navegación termina)
@@ -51,7 +51,7 @@ export class HomeComponent {
 
   // Método privado para verificar si el footer debe ser visible
   private checkFooterVisibility() {
-    if (isPlatformBrowser(this.platformId)) { // 💡 Solo se ejecuta en el navegador
+    if (isPlatformBrowser(this.platformId)) { //  Solo se ejecuta en el navegador
       const scrollPosition = window.scrollY + window.innerHeight;
       const documentHeight = document.body.scrollHeight;
   
