@@ -1,0 +1,106 @@
+.card-container {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 8px 8px 4px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    border: 2px solid #097887;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 12px 12px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dish-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+h3 {
+    margin: 12px 0 6px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+p {
+    font-weight: bold;
+    color: #00796b;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 16px;
+}
+
+.button-group button {
+    border: none;
+    border-radius: 16px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    color: #fff;
+    font-weight: bold;
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.button-group .edit-button {
+    background-color: #097887;
+}
+
+.button-group .edit-button:hover {
+    background-color: #075e6a;
+    transform: scale(1.05);
+}
+
+.button-group .delete-button {
+    background-color: #e53935;
+}
+
+.button-group .delete-button:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+.button-text {
+    display: none;
+    font-size: 0.9rem;
+}
+
+.button-group button:hover .button-text {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        max-width: 100%;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+}

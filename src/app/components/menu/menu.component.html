@@ -1,1 +1,15 @@
-<p>menu works!</p>
+<div class="menu-container">
+  <h2>Menú</h2>
+  <input type="text" 
+         placeholder="Buscar platillo..." 
+         class="search-bar" 
+         [(ngModel)]="searchTerm"
+         (input)="onSearch()" />
+  <div class="menu-grid">
+    <app-menu-card *ngFor="let dish of filteredDishes"
+                   [dish]="dish"
+                   (editDish)="onEditDish(dish)"
+                   (deleteDish)="onDeleteDish(dish)">
+    </app-menu-card>
+  </div>
+</div>
