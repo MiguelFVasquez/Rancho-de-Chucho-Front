@@ -6,10 +6,15 @@
          [(ngModel)]="searchTerm"
          (input)="onSearch()" />
   <div class="menu-grid">
-    <app-menu-card *ngFor="let dish of filteredDishes"
+    <app-menu-card *ngFor="let dish of paginatedDishes"
                    [dish]="dish"
                    (editDish)="onEditDish(dish)"
                    (deleteDish)="onDeleteDish(dish)">
     </app-menu-card>
+  </div>
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
   </div>
 </div>
