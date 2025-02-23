@@ -1,0 +1,50 @@
+.reports-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .reports-box {
+    background-color: #fff; /* Color similar al header */
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 8px 8px 4px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .report-button {
+    background-color: #097887; 
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .report-button:hover {
+    background-color: #097887; 
+ }
+  
+  @media (max-width: 768px) {
+    .reports-box {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .report-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
