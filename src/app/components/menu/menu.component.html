@@ -1,10 +1,17 @@
 <div class="menu-container">
   <h2>Menú</h2>
-  <input type="text" 
-         placeholder="Buscar platillo..." 
-         class="search-bar" 
-         [(ngModel)]="searchTerm"
-         (input)="onSearch()" />
+  <div class="filters-container">
+    <input type="text" 
+           placeholder="Buscar platillo..." 
+           class="search-bar" 
+           [(ngModel)]="searchTerm"
+           (input)="onSearch()" />
+
+    <button class="category-selector" (click)="openCategoryDialog()">
+      Seleccionar categoría
+    </button>
+  </div>
+
   <div class="menu-grid">
     <app-menu-card *ngFor="let dish of paginatedDishes"
                    [dish]="dish"
@@ -12,9 +19,22 @@
                    (deleteDish)="onDeleteDish(dish)">
     </app-menu-card>
   </div>
+
   <div class="pagination">
     <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
     <span>Página {{ currentPage }} de {{ totalPages }}</span>
     <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+  </div>
+
+  <!-- Diálogo para selección de categoría -->
+  <div class="category-dialog" *ngIf="showCategoryDialog">
+    <div class="dialog-content">
+      <h3>Selecciona una categoría</h3>
+      <button *ngFor="let category of categories" 
+              (click)="onCategorySelected(category)">
+        {{ category }}
+      </button>
+      <button class="close-dialog" (click)="closeCategoryDialog()">Cerrar</button>
+    </div>
   </div>
 </div>
