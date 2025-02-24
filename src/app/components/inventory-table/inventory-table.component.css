@@ -1,0 +1,33 @@
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  
+  .inventory-table th,
+  .inventory-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .inventory-table th {
+    background-color: #097887;
+    color: white;
+  }
+  
+  .inventory-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .inventory-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  @media (max-width: 768px) {
+    .inventory-table th,
+    .inventory-table td {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  }

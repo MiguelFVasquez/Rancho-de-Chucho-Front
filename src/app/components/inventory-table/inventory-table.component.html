@@ -1,0 +1,22 @@
+<table class="inventory-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio x Unidad</th>
+        <th>Marca</th>
+        <th>Cantidad Disponible</th>
+        <th>Unidad de Medida</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.id }}</td>
+        <td>{{ product.nombre }}</td>
+        <td>{{ product.precioPorUnidad }}</td>
+        <td>{{ product.marca }}</td>
+        <td>{{ product.cantidad }}</td>
+        <td>{{ product.unidad }}</td>
+      </tr>
+    </tbody>
+  </table>

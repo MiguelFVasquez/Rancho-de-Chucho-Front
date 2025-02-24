@@ -1,1 +1,7 @@
-<p>inventory works!</p>
+<div class="inventory-container">
+    <h2>Inventario de Productos</h2>
+    <input type="text" placeholder="Buscar producto..." class="search-bar" [(ngModel)]="searchTerm" (input)="onSearch()" />
+  
+    <app-inventory-table [products]="filteredProducts"></app-inventory-table>
+  </div>
+  
