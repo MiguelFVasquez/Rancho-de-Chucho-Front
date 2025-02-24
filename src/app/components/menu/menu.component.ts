@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MenuCardComponent } from '../menu-card/menu-card.component';
 import { DishDto } from '../../dto/dishdto';
 import { FormsModule } from '@angular/forms';
+import { DishDetailDto } from '../../dto/dishDetailDto';
+import { MenuDetailComponent } from "../menu-detail/menu-detail.component";
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, MenuCardComponent, FormsModule],
+  imports: [CommonModule, MenuCardComponent, FormsModule, MenuDetailComponent],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
@@ -20,6 +22,7 @@ export class MenuComponent {
     { id: 5, name: 'Empanadas', price: 12000, image: 'empanadas.png', category: 'Snack' },
     { id: 6, name: 'Arroz con leche', price: 8000, image: 'arrozConLeche.png', category: 'Postres' },
   ];
+
   categories: string[] = ['Platos Fuertes', 'Bebidas', 'Snack', 'Postres'];
   selectedCategory: string = '';
   filteredDishes: DishDto[] = [...this.dishes];
@@ -29,6 +32,32 @@ export class MenuComponent {
   itemsPerPage: number = 4;
   totalPages: number = 1;
   showCategoryDialog: boolean = false;
+
+  /**TO DETAIL */
+  //Descrptions simulated
+  private getDishDescription(name: string): string {
+    const descriptions: { [key: string]: string } = {
+      'Tacos al Pastor': 'Tacos tradicionales con carne adobada al estilo pastor.',
+      'Frijoles con chicharron': 'Frijoles acompañados de crujiente chicharrón.',
+      'Sancocho': 'Sopa tradicional con variedad de carnes y verduras.',
+      'Bandeja paisa': 'Plato típico con arroz, frijoles, chicharrón y más.',
+      'Empanadas': 'Empanadas rellenas de carne y papa con ají casero.',
+      'Arroz con leche': 'Postre cremoso a base de arroz y leche con canela.',
+    };
+    return descriptions[name] || 'Descripción no disponible.';
+  }
+  selectedDishDetail: DishDetailDto | null = null; /**To detail dish */
+  
+  onViewDetail(dish: DishDto) {
+    this.selectedDishDetail = {
+      ...dish,
+      description: this.getDishDescription(dish.name),
+    };
+  }
+
+  onCloseDetail() {
+    this.selectedDishDetail = null;
+  }
 
   constructor() {
     this.updatePagination();

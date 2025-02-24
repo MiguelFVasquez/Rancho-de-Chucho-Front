@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DishDto } from '../../dto/dishdto';
+import { DishDetailDto } from '../../dto/dishDetailDto';
 
 
 @Component({
@@ -12,7 +13,11 @@ import { DishDto } from '../../dto/dishdto';
 })
 export class MenuCardComponent {
   @Input() dish!: DishDto;
+  @Output() viewDetail = new EventEmitter<DishDto>();
 
+  onCardClick() {
+  this.viewDetail.emit(this.dish);
+  }
   onEdit() {
     console.log('Editar:', this.dish);
   }
