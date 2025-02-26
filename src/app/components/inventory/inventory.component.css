@@ -1,13 +1,83 @@
 .inventory-container {
-    padding: 16px;
+    padding: 20px;
 }
-  
+
+.add-product-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #097887;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
+.add-product-btn:hover {
+    background-color: #097889;
+}
+
 .search-bar {
     width: 100%;
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
-  
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.edit-btn {
+    background-color: #07daff;
+}
+
+.edit-btn:hover:not(:disabled) {
+    background-color: #04a9c6;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.edit-btn:disabled,
+.delete-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+@media (max-width: 768px) {
+    .inventory-container {
+    padding: 10px;
+    }
+
+    .search-bar {
+    font-size: 0.9rem;
+    }
+
+    .add-product-btn,
+    .edit-btn,
+    .delete-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    }
+}   

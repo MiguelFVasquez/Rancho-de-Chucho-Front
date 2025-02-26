@@ -1,7 +1,22 @@
 <div class="inventory-container">
-    <h2>Inventario de Productos</h2>
-    <input type="text" placeholder="Buscar producto..." class="search-bar" [(ngModel)]="searchTerm" (input)="onSearch()" />
-  
-    <app-inventory-table [products]="filteredProducts"></app-inventory-table>
+  <h2>Inventario de Productos</h2>
+  <button class="add-product-btn" (click)="onAddProduct()">Agregar Producto</button>
+  <input
+    type="text"
+    placeholder="Buscar producto..."
+    class="search-bar"
+    [(ngModel)]="searchTerm"
+    (input)="onSearch()"
+  />
+
+  <app-inventory-table [products]="filteredProducts" (rowSelected)="onRowSelected($event)"></app-inventory-table>
+
+  <div class="action-buttons">
+    <button class="edit-btn" [disabled]="!selectedProduct" (click)="onEditProduct()">
+      Editar Producto
+    </button>
+    <button class="delete-btn" [disabled]="!selectedProduct" (click)="onDeleteProduct()">
+      Eliminar Producto
+    </button>
   </div>
-  
+</div>

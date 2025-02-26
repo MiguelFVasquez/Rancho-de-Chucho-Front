@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { productDto } from '../../dto/productDto';
 
 @Component({
   selector: 'app-inventory-table',
@@ -9,5 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './inventory-table.component.css'
 })
 export class InventoryTableComponent {
-  @Input() products: any[] = [];
+  @Input() products: productDto[] = [];
+  @Output() rowSelected = new EventEmitter<productDto>();
+
+  selectedProduct?: productDto;
+
+  selectProduct(product: productDto): void {
+    this.selectedProduct = product;
+    this.rowSelected.emit(product);
+  }
 }
