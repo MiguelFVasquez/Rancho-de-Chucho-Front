@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { productDto } from '../../dto/productDto';
+import { productDto } from '../../dto/product/productDto';
 
 @Component({
   selector: 'app-inventory-table',

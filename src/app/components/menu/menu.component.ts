@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuCardComponent } from '../menu-card/menu-card.component';
-import { DishDto } from '../../dto/dishdto';
+import { DishDto } from '../../dto/dish/dishdto';
 import { FormsModule } from '@angular/forms';
-import { DishDetailDto } from '../../dto/dishDetailDto';
+import { DishDetailDto } from '../../dto/dish/dishDetailDto';
 import { MenuDetailComponent } from "../menu-detail/menu-detail.component";
 
 @Component({

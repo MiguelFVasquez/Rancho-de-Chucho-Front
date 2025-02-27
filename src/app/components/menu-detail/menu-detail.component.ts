@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DishDetailDto } from '../../dto/dishDetailDto';
-import { DishDto } from '../../dto/dishdto';
+import { DishDetailDto } from '../../dto/dish/dishDetailDto';
+import { DishDto } from '../../dto/dish/dishdto';
 
 
 @Component({
