@@ -19,7 +19,7 @@ export class InventoryService {
   }
   //Method to edit a product
   editProduct(id:number, editProduct:editProduct):Observable<MessageDTO>{
-    return this.http.put<MessageDTO>(`${this.apiURL}/${id}/edit`, editProduct);
+    return this.http.put<MessageDTO>(`${this.apiURL}/${id}/update`, editProduct);
   }
   //Method to edit stock of a producto
   addToStock(id: number, nueva_cantidad: number): Observable<boolean> {
@@ -29,7 +29,7 @@ export class InventoryService {
   
   //Method to delete a product
   deleteProduct(id:number): Observable<MessageDTO>{
-    return this.http.delete<MessageDTO>(`${this.apiURL}/${id}` );
+    return this.http.delete<MessageDTO>(`${this.apiURL}/${id}/delete` );
   }
 
 

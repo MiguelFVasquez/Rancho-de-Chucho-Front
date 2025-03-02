@@ -1,4 +1,4 @@
 export interface MessageDTO {
-    status: string;   // Puede ser 'OK', 'ERROR', etc.
-    message: any;  // El mensaje descriptivo de la respuesta.
+    status: boolean;  // true (success) or false (error)
+    message: number;  // ID of the created product or -1 if error
 }
