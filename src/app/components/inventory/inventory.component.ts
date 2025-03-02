@@ -213,11 +213,25 @@ export class InventoryComponent {
 
   // Confirma la adición de stock
   confirmAddStock(): void {
-    if (this.selectedStockProduct) {
-      this.selectedStockProduct.cantidadDisponible += this.stockQuantity;
-      this.showStockModal = false;
+    if (this.selectedStockProduct && this.stockQuantity > 0) {
+      this.inventoryService.addToStock(this.selectedStockProduct.id, this.stockQuantity)
+        .subscribe({
+          next: (response) => {
+            if (response.status) {  
+              // Si el backend indica éxito, actualizamos la cantidad
+              this.selectedStockProduct!.cantidadDisponible += this.stockQuantity;
+            } else {
+              console.error('Error al actualizar stock, código:', response.message);
+            }
+            this.closeStockModal();
+          },
+          error: (err) => {
+            console.error('Error en la solicitud:', err);
+            this.closeStockModal();
+          }
+        });
     }
   }
-
+  
 
 }

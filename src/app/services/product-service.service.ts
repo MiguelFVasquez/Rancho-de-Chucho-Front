@@ -22,10 +22,11 @@ export class InventoryService {
     return this.http.put<MessageDTO>(`${this.apiURL}/${id}/update`, editProduct);
   }
   //Method to edit stock of a producto
-  addToStock(id: number, nueva_cantidad: number): Observable<boolean> {
-    const url = `${this.apiURL}/${id}/${nueva_cantidad}/update`;
-    return this.http.put<boolean>(url, {});
+  addToStock(id: number, nueva_cantidad: number): Observable<MessageDTO> {
+    const url = `${this.apiURL}/updateStock/${id}/${nueva_cantidad}/`;
+    return this.http.put<MessageDTO>(url, {});
   }
+  
   
   //Method to delete a product
   deleteProduct(id:number): Observable<MessageDTO>{
