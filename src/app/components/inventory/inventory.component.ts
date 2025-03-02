@@ -19,17 +19,18 @@ export class InventoryComponent {
   showEditModal: boolean = false;
   showDeleteModal: boolean = false; 
   editProductData: editProduct = {
-    name: '',
+    id:0,
+    nombre: '',
     marca: '',
-    precio_compra: 0,
-    unidad_medida: ''
+    precioCompra: 0,
+    unidadMedida: ''
   };
 
   products = [
-    { id: 1, name: 'Harina', precio_compra: 2.5, marca: 'Maizena', cantidad_disponible: 20, unidad_medida: "Kg" },
-    { id: 2, name: 'Azúcar', precio_compra: 1.8, marca: 'Manuelita', cantidad_disponible: 15, unidad_medida: 'kg' },
-    { id: 3, name: 'Aceite', precio_compra: 3.0, marca: 'Girasol', cantidad_disponible: 10, unidad_medida: 'lt' },
-    { id: 4, name: 'Leche', precio_compra: 1.2, marca: 'Colanta', cantidad_disponible: 30, unidad_medida: 'lt' }
+    { id: 2, nombre: 'Azúcar', precioCompra: 1.8, marca: 'Manuelita', cantidadDisponible: 15, unidadMedida: 'kg' },
+    { id: 1, nombre: 'Harina', precioCompra: 2.5, marca: 'Maizena', cantidadDisponible: 20, unidadMedida: "Kg" },
+    { id: 3, nombre: 'Aceite', precioCompra: 3.0, marca: 'Girasol', cantidadDisponible: 10, unidadMedida: 'lt' },
+    { id: 4, nombre: 'Leche', precioCompra: 1.2, marca: 'Colanta', cantidadDisponible: 30, unidadMedida: 'lt' }
   ];
 
 
@@ -45,7 +46,7 @@ export class InventoryComponent {
 
   get filteredProducts() {
     return this.products.filter(product =>
-      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      product.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 

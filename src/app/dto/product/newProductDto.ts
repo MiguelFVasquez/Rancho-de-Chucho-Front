@@ -1,7 +1,7 @@
 export interface NewProduct{
-    name:string;
+    nombre:string;
     marca:string;
-    precio_compra:number;
-    cantidad_disponible:number;
-    unidad_medida:string
+    precioCompra:number;
+    cantidadDisponible:number;
+    unidadMedida:string
 }

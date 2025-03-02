@@ -1,6 +1,7 @@
 export interface editProduct{
-    name:string;
+    id:number;
+    nombre:string;
     marca:string;
-    precio_compra:number;
-    unidad_medida:string
+    precioCompra:number;
+    unidadMedida:string
 }

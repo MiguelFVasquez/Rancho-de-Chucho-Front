@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { NewProduct } from '../dto/product/newProductDto';
 import { MessageDTO } from '../dto/messageDto';   
 import { editProduct } from '../dto/product/editProductDto';
-import {newStock} from '../dto/product/newStockProductDto'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,9 +22,11 @@ export class InventoryService {
     return this.http.put<MessageDTO>(`${this.apiURL}/${id}/edit`, editProduct);
   }
   //Method to edit stock of a producto
-  addToStock(id:number,newStock:newStock):Observable<MessageDTO>{
-    return this.http.put<MessageDTO>(`${this.apiURL}/${id}/update`, newStock);
+  addToStock(id: number, nueva_cantidad: number): Observable<boolean> {
+    const url = `${this.apiURL}/${id}/${nueva_cantidad}/update`;
+    return this.http.put<boolean>(url, {});
   }
+  
   //Method to delete a product
   deleteProduct(id:number): Observable<MessageDTO>{
     return this.http.delete<MessageDTO>(`${this.apiURL}/${id}` );
