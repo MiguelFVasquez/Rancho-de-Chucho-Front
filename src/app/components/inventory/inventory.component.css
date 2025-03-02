@@ -157,7 +157,26 @@
 .modal-buttons button[type="button"]:hover {
     background-color: #bbb;
 }
-
+.add-stock-btn {
+    background-color: #097887;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .add-stock-btn:hover {
+    background-color: #065d66;
+  }
+  .cancel-stock-btn{
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
 
 /*  Responsividad para móviles */
 @media (max-width: 768px) {

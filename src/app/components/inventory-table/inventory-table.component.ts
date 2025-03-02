@@ -12,11 +12,17 @@ import { productDto } from '../../dto/product/productDto';
 export class InventoryTableComponent {
   @Input() products: productDto[] = [];
   @Output() rowSelected = new EventEmitter<productDto>();
+  @Output() stockAdded = new EventEmitter<productDto>();
 
   selectedProduct?: productDto;
 
   selectProduct(product: productDto): void {
     this.selectedProduct = product;
     this.rowSelected.emit(product);
+  }
+
+  addStock(product: productDto, event: Event): void {
+    event.stopPropagation(); // Evita que se seleccione la fila al hacer clic en el botón
+    this.stockAdded.emit(product);
   }
 }

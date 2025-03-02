@@ -9,7 +9,7 @@
     (input)="onSearch()"
   />
 
-  <app-inventory-table [products]="filteredProducts" (rowSelected)="onRowSelected($event)"></app-inventory-table>
+  <app-inventory-table [products]="filteredProducts" (rowSelected)="onRowSelected($event)"(stockAdded)="openStockModal($event)"></app-inventory-table>
 
   <div class="action-buttons">
     <button class="edit-btn" [disabled]="!selectedProduct" (click)="openEditModal()">
@@ -74,7 +74,7 @@
   <div class="modal" *ngIf="showDeleteModal">
     <div class="modal-content">
       <h2>Confirmar Eliminación</h2>
-      <p>¿Seguro que desea eliminar el producto <strong>{{ selectedProduct?.name }}</strong>?</p>
+      <p>¿Seguro que desea eliminar el producto <strong>{{ selectedProduct?.nombre }}</strong>?</p>
 
       <!-- Botones -->
       <div class="modal-buttons">
@@ -83,4 +83,20 @@
       </div>
     </div>
   </div>
+  <!-- Modal para agregar stock -->
+<div class="modal" *ngIf="showStockModal">
+  <div class="modal-content">
+    <h2>Agregar Stock</h2>
+    
+    <p><strong>Producto:</strong> {{ selectedStockProduct?.nombre }}</p>
+    
+    <label for="stockQuantity">Cantidad a agregar:</label>
+    <input type="number" id="stockQuantity" [(ngModel)]="stockQuantity" min="1" />
+
+    <div class="modal-buttons">
+      <button class="add-stock-btn" (click)="confirmAddStock()">Agregar</button>
+      <button class= "cancel-stock-btn" (click)="closeStockModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
 </div>

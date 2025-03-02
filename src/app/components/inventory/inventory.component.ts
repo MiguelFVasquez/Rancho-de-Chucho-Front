@@ -6,6 +6,7 @@ import { editProduct } from '../../dto/product/editProductDto';
 import { InventoryService } from '../../services/product-service.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { NewProduct } from '../../dto/product/newProductDto';
+import { productDto } from '../../dto/product/productDto';
 
 @Component({
   selector: 'app-inventory',
@@ -15,12 +16,16 @@ import { NewProduct } from '../../dto/product/newProductDto';
   styleUrl: './inventory.component.css'
 })
 export class InventoryComponent {
+
   searchTerm: string = '';
-  selectedProduct: any = null;
+  selectedProduct: productDto | null = null;  // Antes era any
   productForm: FormGroup;
   showModal: boolean = false;  
   showEditModal: boolean = false;
   showDeleteModal: boolean = false; 
+  selectedStockProduct?: productDto;
+  stockQuantity: number = 1;
+  showStockModal = false;
   editProductData: editProduct = {
     id:0,
     nombre: '',
@@ -192,5 +197,27 @@ export class InventoryComponent {
   closeDeleteModal() {
     this.showDeleteModal = false;
   }
+  //-------STOCK MODAL--------
+
+  // Recibe el evento desde la tabla y abre el modal
+  openStockModal(product: productDto): void {
+    this.selectedStockProduct = product;
+    this.stockQuantity = 1;
+    this.showStockModal = true;
+  }
+
+  // Cierra el modal sin hacer cambios
+  closeStockModal(): void {
+    this.showStockModal = false;
+  }
+
+  // Confirma la adición de stock
+  confirmAddStock(): void {
+    if (this.selectedStockProduct) {
+      this.selectedStockProduct.cantidadDisponible += this.stockQuantity;
+      this.showStockModal = false;
+    }
+  }
+
 
 }

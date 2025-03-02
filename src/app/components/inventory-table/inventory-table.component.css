@@ -3,7 +3,9 @@
     border-collapse: collapse;
     margin-top: 16px;
   }
-  
+  .inventory-table tr.selected {
+    background-color: #78e4f2;
+  }
   .inventory-table th,
   .inventory-table td {
     border: 1px solid #ddd;
@@ -23,7 +25,31 @@
   .inventory-table tr:hover {
     background-color: #f1f1f1;
   }
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+  }
   
+.icon-button .tooltip {
+  visibility: hidden;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.icon-button:hover .tooltip {
+  visibility: visible;
+}
   @media (max-width: 768px) {
     .inventory-table th,
     .inventory-table td {
