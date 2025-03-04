@@ -7,6 +7,7 @@ import { InventoryService } from '../../services/product-service.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { NewProduct } from '../../dto/product/newProductDto';
 import { productDto } from '../../dto/product/productDto';
+import { showAlert } from '../../dto/alert';
 
 @Component({
   selector: 'app-inventory',
@@ -26,6 +27,9 @@ export class InventoryComponent {
   selectedStockProduct?: productDto;
   stockQuantity: number = 1;
   showStockModal = false;
+  //Alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | '' = ''; // Define el tipo de alerta
   editProductData: editProduct = {
     id:0,
     nombre: '',
@@ -66,6 +70,7 @@ export class InventoryComponent {
     console.log('Producto seleccionado:', product);
   } 
 
+ 
   //---------ADD MODAL--------------
   //Open a form to register the info
   onAddProduct() {
@@ -74,34 +79,23 @@ export class InventoryComponent {
   }
 
   addProduct() {
-    // Check if the form is valid before proceeding.
     if (this.productForm.valid) {
-        // Get the form values and assign them to a new product object.
-        const newProduct: NewProduct = this.productForm.value;
-
-        // Call the inventory service to save the new product.
-        this.inventoryService.saveProduct(newProduct).subscribe({
-            // Handle the response from the server.
-            next: (response: MessageDTO) => {
-                // Check if the product was successfully created.
-                if (response.status) {
-                    // Log the success message with the product ID.
-                    console.log(`Product created with ID: ${response.message}`);
-                    // Close the modal after successful creation.
-                    this.showModal = false;
-                } else {
-                    // Log an error message if the product creation failed.
-                    console.error('Error creating product.');
-                }
-            },
-            // Handle any errors that occur during the request.
-            error: (error) => {
-                // Log the server error.
-                console.error('Server error:', error);
-            }
-        });
+      const newProduct: NewProduct = this.productForm.value;
+      this.inventoryService.saveProduct(newProduct).subscribe({
+        next: (response: MessageDTO) => {
+          if (response.status) {
+            this.showModal = false;
+            showAlert(`Producto agregado con ID: ${response.message}`, 'success');
+          } else {
+            showAlert('Error al agregar el producto.', 'error');
+          }
+        },
+        error: () => {
+          showAlert('Error de servidor al agregar el producto.', 'error');
+        }
+      });
     }
-}
+  }
 //-------EDIT MODAL--------------  
   openEditModal() {
     if (this.selectedProduct) {
@@ -111,42 +105,25 @@ export class InventoryComponent {
   }
 // Esta función guarda el producto editado y actualiza la lista
   saveEditedProduct() {
-    // Check if a product is selected for editing.
     if (this.selectedProduct) {
-        // Get the ID of the selected product.
-        const id = this.selectedProduct.id;
-
-        // Call the inventory service to update the product with the new data.
-        this.inventoryService.editProduct(id, this.editProductData).subscribe({
-            // Handle the response from the server.
-            next: (response: MessageDTO) => {
-                // Check if the product was successfully updated on the backend.
-                if (response.status) {
-                    // Find the index of the product in the local array.
-                    const index = this.products.findIndex(p => p.id === id);
-                    
-                    // If the product is found in the local array, update it with the new data.
-                    if (index !== -1) {
-                        // Merge the existing product data with the edited data.
-                        this.products[index] = { ...this.products[index], ...this.editProductData };
-                    }
-
-                    // Close the edit modal after successful update.
-                    this.showEditModal = false;
-
-                    // Reset the selected product to null to clear the selection.
-                    this.selectedProduct = null;
-                } else {
-                    // Log an error message if the product update failed.
-                    console.error('Error updating product.');
-                }
-            },
-            // Handle any errors that occur during the request.
-            error: (error) => {
-                // Log the server error.
-                console.error('Server error:', error);
+      const id = this.selectedProduct.id;
+      this.inventoryService.editProduct(id, this.editProductData).subscribe({
+        next: (response: MessageDTO) => {
+          if (response.status) {
+            const index = this.products.findIndex(p => p.id === id);
+            if (index !== -1) {
+              this.products[index] = { ...this.products[index], ...this.editProductData };
             }
-        });
+            this.showEditModal = false;
+            showAlert('Producto actualizado correctamente.', 'success');
+          } else {
+            showAlert('Error al actualizar el producto.', 'error');
+          }
+        },
+        error: () => {
+          showAlert('Error de servidor al actualizar el producto.', 'error');
+        }
+      });
     }
   }
 
@@ -162,38 +139,26 @@ export class InventoryComponent {
 
   // Esta función confirma la eliminación de un producto
   confirmDelete() {
-    // Check if a product is selected for deletion.
     if (this.selectedProduct) {
-        // Get the ID of the selected product.
-        const id = this.selectedProduct.id;
-
-        // Call the inventory service to delete the product from the backend.
-        this.inventoryService.deleteProduct(id).subscribe({
-            // Handle the response from the server.
-            next: (response: MessageDTO) => {
-                // Check if the product was successfully deleted on the backend.
-                if (response.status) {
-                    // Remove the product from the local array (`this.products`) by filtering it out.
-                    this.products = this.products.filter(product => product.id !== id);
-
-                    // Reset the selected product to null to clear the selection.
-                    this.selectedProduct = null;
-
-                    // Close the delete modal after successful deletion.
-                    this.showDeleteModal = false;
-                } else {
-                    // Log an error message if the product deletion failed.
-                    console.error('Error deleting product.');
-                }
-            },
-            // Handle any errors that occur during the request.
-            error: (error) => {
-                // Log the server error.
-                console.error('Server error:', error);
-            }
-        });
+      const id = this.selectedProduct.id;
+      this.inventoryService.deleteProduct(id).subscribe({
+        next: (response: MessageDTO) => {
+          if (response.status) {
+            this.products = this.products.filter(product => product.id !== id);
+            this.selectedProduct = null;
+            this.showDeleteModal = false;
+            showAlert('Producto eliminado correctamente.', 'success');
+          } else {
+            showAlert('Error al eliminar el producto.', 'error');
+          }
+        },
+        error: () => {
+          showAlert('Error de servidor al eliminar el producto.', 'error');
+        }
+      });
     }
   }
+
   closeDeleteModal() {
     this.showDeleteModal = false;
   }
@@ -218,20 +183,18 @@ export class InventoryComponent {
         .subscribe({
           next: (response) => {
             if (response.status) {  
-              // Si el backend indica éxito, actualizamos la cantidad
               this.selectedStockProduct!.cantidadDisponible += this.stockQuantity;
+              showAlert('Stock actualizado correctamente.', 'success');
             } else {
-              console.error('Error al actualizar stock, código:', response.message);
+              showAlert('Error al actualizar stock.', 'error');
             }
             this.closeStockModal();
           },
-          error: (err) => {
-            console.error('Error en la solicitud:', err);
+          error: () => {
+            showAlert('Error en la solicitud al actualizar stock.', 'error');
             this.closeStockModal();
           }
         });
     }
   }
-  
-
 }
