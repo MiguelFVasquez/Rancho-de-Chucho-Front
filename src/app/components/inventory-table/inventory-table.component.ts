@@ -14,8 +14,9 @@ export class InventoryTableComponent {
   @Output() rowSelected = new EventEmitter<productDto>();
   @Output() stockAdded = new EventEmitter<productDto>();
 
-  selectedProduct?: productDto;
+  selectedProduct: productDto | null = null;
 
+  
   selectProduct(product: productDto): void {
     this.selectedProduct = product;
     this.rowSelected.emit(product);

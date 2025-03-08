@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of products" (click)="selectProduct(product)">
+    <tr *ngFor="let product of products" (click)="selectProduct(product)" [class.selectedProduct]="product === selectedProduct">
       <td>{{ product.nombre }}</td>
       <td>{{ product.marca }}</td>
       <td>{{ product.precioCompra }}</td>

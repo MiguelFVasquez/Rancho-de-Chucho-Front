@@ -57,8 +57,6 @@ export class InventoryComponent {
   loadProducts(): void {
     this.inventoryService.getAllProducts().subscribe({
       next: (response) => {
-        console.log("Respuesta de la API:", response);
-  
         if (!response.error && response.respuesta) {
           this.products = response.respuesta;
         } else {
@@ -67,12 +65,11 @@ export class InventoryComponent {
         }
       },
       error: (err) => {
-        console.error("🚨 Error en la petición:", err);
+        console.error("Error en la petición:", err);
         this.products = [];
       }
     });
   }
-  
   
   //Filtro de busqueda
   get filteredProducts() {
@@ -86,9 +83,9 @@ export class InventoryComponent {
   onSearch() {
     console.log(`Buscando: ${this.searchTerm}`);
   }
-  onRowSelected(product: any) {
+  onRowSelected(product: productDto) {
     this.selectedProduct = product;
-    console.log('Producto seleccionado:', product);
+
   } 
 
  
@@ -119,6 +116,7 @@ export class InventoryComponent {
           if (response.error) {
             this.showModal = false;
             showAlert(`✅ Producto agregado con ID: ${response.respuesta}`, 'success');
+            this.loadProducts();
           } else {
             showAlert('❌ Error al agregar el producto.', 'error');
           }
@@ -161,9 +159,9 @@ export class InventoryComponent {
               this.products[index] = { ...this.products[index], ...this.editProductData };
             }
             this.showEditModal = false;
-            showAlert('Producto actualizado correctamente.', 'success');
+            showAlert('✅ Producto actualizado correctamente.', 'success');
           } else {
-            showAlert('Error al actualizar el producto.', 'error');
+            showAlert('❌ Error al actualizar el producto.', 'error');
           }
         },
         error: () => {
@@ -193,9 +191,9 @@ export class InventoryComponent {
             this.products = this.products.filter(product => product.id !== id);
             this.selectedProduct = null;
             this.showDeleteModal = false;
-            showAlert('Producto eliminado correctamente.', 'success');
+            showAlert('✅ Producto eliminado correctamente.', 'success');
           } else {
-            showAlert('Error al eliminar el producto.', 'error');
+            showAlert('❌ Error al eliminar el producto.', 'error');
           }
         },
         error: () => {
@@ -230,9 +228,9 @@ export class InventoryComponent {
           next: (response) => {
             if (response.error) {  
               this.selectedStockProduct!.cantidadDisponible += this.stockQuantity;
-              showAlert('Stock actualizado correctamente.', 'success');
+              showAlert(' ✅ Stock actualizado correctamente.', 'success');
             } else {
-              showAlert('Error al actualizar stock.', 'error');
+              showAlert('❌ Error al actualizar stock.', 'error');
             }
             this.closeStockModal();
           },

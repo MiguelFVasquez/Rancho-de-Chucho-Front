@@ -3,9 +3,10 @@
     border-collapse: collapse;
     margin-top: 16px;
   }
-  .inventory-table tr.selected {
-    background-color: #78e4f2;
+  .inventory-table tr.selectedProduct {
+    background-color: #097887 !important;
   }
+  
   .inventory-table th,
   .inventory-table td {
     border: 1px solid #ddd;
