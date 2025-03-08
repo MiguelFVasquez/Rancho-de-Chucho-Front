@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { NewProduct } from '../dto/product/newProductDto';
 import { MessageDTO } from '../dto/messageDto';   
 import { editProduct } from '../dto/product/editProductDto';
+import { productDto } from '../dto/product/productDto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiURL = 'http://localhost:8080/api/product';  
+  private apiURL = 'http://localhost:8080/api/ingrediente';  
 
   constructor(private http: HttpClient) {}
 
@@ -27,7 +28,12 @@ export class InventoryService {
     return this.http.put<MessageDTO>(url, {});
   }
   
-  
+  //Method to get all products
+  getAllProducts(): Observable<MessageDTO<productDto[]>> {
+    return this.http.get<MessageDTO<productDto[]>>(`${this.apiURL}/getAll`);
+  }
+
+
   //Method to delete a product
   deleteProduct(id:number): Observable<MessageDTO>{
     return this.http.delete<MessageDTO>(`${this.apiURL}/${id}/delete` );

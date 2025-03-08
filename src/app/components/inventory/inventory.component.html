@@ -25,16 +25,16 @@
       <h3>Nuevo Producto</h3>
       <form [formGroup]="productForm" (ngSubmit)="addProduct()">
         <label>Nombre:</label>
-        <input type="text" formControlName="name" />
+        <input type="text" formControlName="nombre" />
   
         <label>Marca:</label>
         <input type="text" formControlName="marca" />
   
         <label>Precio:</label>
-        <input type="number" formControlName="precio_compra" />
+        <input type="number" formControlName="precioCompra" />
   
         <label>Cantidad:</label>
-        <input type="number" formControlName="cantidad_disponible" />
+        <input type="number" formControlName="cantidadDisponible" />
   
         <label>Unidad de medida:</label>
         <input type="text" formControlName="unidad_medida" />
@@ -61,7 +61,7 @@
       <input type="number" id="editPrecio" [(ngModel)]="editProductData.precioCompra">
   
       <label for="editUnidad">Unidad de Medida:</label>
-      <input type="text" id="editUnidad" [(ngModel)]="editProductData.unidadMedida">
+      <input type="text" id="editUnidad" [(ngModel)]="editProductData.unidad_medida">
   
       <!-- Botones -->
       <div class="modal-buttons">

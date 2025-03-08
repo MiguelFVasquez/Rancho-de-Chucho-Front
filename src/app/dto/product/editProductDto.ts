@@ -3,5 +3,5 @@ export interface editProduct{
     nombre:string;
     marca:string;
     precioCompra:number;
-    unidadMedida:string
+    unidad_medida:string
 }

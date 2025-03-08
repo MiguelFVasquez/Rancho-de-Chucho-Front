@@ -19,7 +19,7 @@ import { showAlert } from '../../dto/alert';
 export class InventoryComponent {
 
   searchTerm: string = '';
-  selectedProduct: productDto | null = null;  // Antes era any
+  selectedProduct: productDto | null = null;
   productForm: FormGroup;
   showModal: boolean = false;  
   showEditModal: boolean = false;
@@ -27,40 +27,61 @@ export class InventoryComponent {
   selectedStockProduct?: productDto;
   stockQuantity: number = 1;
   showStockModal = false;
-  //Alert
-  alertMessage: string = '';
-  alertType: 'success' | 'error' | '' = ''; // Define el tipo de alerta
+
+
   editProductData: editProduct = {
     id:0,
     nombre: '',
     marca: '',
     precioCompra: 0,
-    unidadMedida: ''
+    unidad_medida: ''
   };
 
-  products = [
-    { id: 2, nombre: 'Azúcar', precioCompra: 1.8, marca: 'Manuelita', cantidadDisponible: 15, unidadMedida: 'kg' },
-    { id: 1, nombre: 'Harina', precioCompra: 2.5, marca: 'Maizena', cantidadDisponible: 20, unidadMedida: "Kg" },
-    { id: 3, nombre: 'Aceite', precioCompra: 3.0, marca: 'Girasol', cantidadDisponible: 10, unidadMedida: 'lt' },
-    { id: 4, nombre: 'Leche', precioCompra: 1.2, marca: 'Colanta', cantidadDisponible: 30, unidadMedida: 'lt' }
-  ];
+  products: productDto[]=[];
 
 
   constructor(private fb: FormBuilder, private inventoryService: InventoryService) {
     this.productForm = this.fb.group({
-      name: ['', Validators.required],
+      nombre: ['', Validators.required],
       marca: ['', Validators.required],
-      precio_compra: [0, [Validators.required, Validators.min(0.1)]],
-      cantidad_disponible: [0, [Validators.required, Validators.min(1)]],
+      precioCompra: [0, [Validators.required, Validators.min(0.1)]],
+      cantidadDisponible: [0, [Validators.required, Validators.min(1)]],
       unidad_medida: ['', Validators.required]
     });
   }
-
-  get filteredProducts() {
-    return this.products.filter(product =>
-      product.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  ngOnInit(): void{
+    this.loadProducts();
   }
+
+  //GET ALL PRODUCTS-
+  loadProducts(): void {
+    this.inventoryService.getAllProducts().subscribe({
+      next: (response) => {
+        console.log("Respuesta de la API:", response);
+  
+        if (!response.error && response.respuesta) {
+          this.products = response.respuesta;
+        } else {
+          console.warn("La API no devolvió datos válidos.");
+          this.products = [];
+        }
+      },
+      error: (err) => {
+        console.error("🚨 Error en la petición:", err);
+        this.products = [];
+      }
+    });
+  }
+  
+  
+  //Filtro de busqueda
+  get filteredProducts() {
+    return this.products ? this.products.filter(
+      product =>
+        product.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+      ):[];
+  }
+  
 
   onSearch() {
     console.log(`Buscando: ${this.searchTerm}`);
@@ -80,22 +101,47 @@ export class InventoryComponent {
 
   addProduct() {
     if (this.productForm.valid) {
-      const newProduct: NewProduct = this.productForm.value;
+      const newProduct: NewProduct = {
+        nombre: this.productForm.value.nombre,
+        marca: this.productForm.value.marca,
+        precioCompra: Number(this.productForm.value.precioCompra.toFixed(2)+0.0),
+        cantidadDisponible: this.productForm.value.cantidadDisponible,
+        unidad_medida: this.productForm.value.unidad_medida 
+      };
+  
+      console.log("📤 Enviando al backend:", JSON.stringify(newProduct));
+  
       this.inventoryService.saveProduct(newProduct).subscribe({
         next: (response: MessageDTO) => {
-          if (response.status) {
+          console.log("✅ Respuesta del backend:", response);
+
+          // ✅ Invertimos la lógica, ahora 'error: true' significa éxito
+          if (response.error) {
             this.showModal = false;
-            showAlert(`Producto agregado con ID: ${response.message}`, 'success');
+            showAlert(`✅ Producto agregado con ID: ${response.respuesta}`, 'success');
           } else {
-            showAlert('Error al agregar el producto.', 'error');
+            showAlert('❌ Error al agregar el producto.', 'error');
           }
         },
-        error: () => {
-          showAlert('Error de servidor al agregar el producto.', 'error');
+        error: (err) => {
+          console.error("Error en la petición:", err);
+          console.error("Respuesta detallada del backend:", err.error);
+  
+          if (err.status === 400 && typeof err.error === 'object') {
+            const validationErrors = Object.entries(err.error)
+              .map(([field, message]) => `${field}: ${message}`)
+              .join('\n');
+            showAlert(`⚠️ Errores de validación:\n${validationErrors}`, 'error');
+          } else {
+            showAlert(`Error de servidor: ${err.error.message || 'Desconocido'}`, 'error');
+          }
         }
       });
     }
-  }
+}
+
+  
+  
 //-------EDIT MODAL--------------  
   openEditModal() {
     if (this.selectedProduct) {
@@ -109,7 +155,7 @@ export class InventoryComponent {
       const id = this.selectedProduct.id;
       this.inventoryService.editProduct(id, this.editProductData).subscribe({
         next: (response: MessageDTO) => {
-          if (response.status) {
+          if (response.error) {
             const index = this.products.findIndex(p => p.id === id);
             if (index !== -1) {
               this.products[index] = { ...this.products[index], ...this.editProductData };
@@ -143,7 +189,7 @@ export class InventoryComponent {
       const id = this.selectedProduct.id;
       this.inventoryService.deleteProduct(id).subscribe({
         next: (response: MessageDTO) => {
-          if (response.status) {
+          if (response.error) {
             this.products = this.products.filter(product => product.id !== id);
             this.selectedProduct = null;
             this.showDeleteModal = false;
@@ -182,7 +228,7 @@ export class InventoryComponent {
       this.inventoryService.addToStock(this.selectedStockProduct.id, this.stockQuantity)
         .subscribe({
           next: (response) => {
-            if (response.status) {  
+            if (response.error) {  
               this.selectedStockProduct!.cantidadDisponible += this.stockQuantity;
               showAlert('Stock actualizado correctamente.', 'success');
             } else {

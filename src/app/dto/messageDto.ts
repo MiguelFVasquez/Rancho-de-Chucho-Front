@@ -1,4 +1,4 @@
-export interface MessageDTO {
-    status: boolean;  // true (success) or false (error)
-    message: number;  // ID of the created product or -1 if error
+export interface MessageDTO<T = any> {
+    error: boolean;  // false (success) or true (error)
+    respuesta: T;  // Contiene los datos devueltos por la API
 }

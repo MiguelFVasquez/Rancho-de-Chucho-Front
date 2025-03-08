@@ -4,5 +4,5 @@ export interface productDto{
     marca:string;
     precioCompra:number;
     cantidadDisponible:number;
-    unidadMedida:string
+    unidad_medida:string
 }

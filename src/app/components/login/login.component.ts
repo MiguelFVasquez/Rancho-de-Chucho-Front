@@ -36,7 +36,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      if (email === 'admin@gmail.com' && password === 'Miguel1234') {
+      if (email === 'admin@gmail.com' && password === 'admin1234') {
         //  Redirigir al componente 'administrator' si las credenciales son correctas
         this.router.navigate(['/administrator']);
       } else {
