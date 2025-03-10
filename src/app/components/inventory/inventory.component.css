@@ -1,214 +1,243 @@
-.inventory-container {
-    padding: 20px;
-}
-
-.add-product-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    background-color: #097887;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-bottom: 16px;
-}
-
-.add-product-btn:hover {
-    background-color: #097889;
-}
-
-.search-bar {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    margin-bottom: 16px;
-}
-
-.action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-.edit-btn,
-.delete-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
-
-.edit-btn {
-    background-color: #029bb6;
-}
-
-.edit-btn:hover:not(:disabled) {
-    background-color: #04a9c6;
-}
-
-.delete-btn {
-    background-color: #dc3545;
-}
-
-.delete-btn:hover:not(:disabled) {
-    background-color: #c82333;
-}
-
-.edit-btn:disabled,
-.delete-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-/*  Fondo del modal con opacidad */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-/* Contenedor del modal */
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-/*  Animación para el modal */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Estilos del formulario dentro del modal */
-.modal-content label {
-    display: block;
-    text-align: left;
-    font-weight: bold;
-    margin-top: 10px;
-    color: #097887;
-}
-
-.modal-content input {
-    width: 80%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    margin-top: 5px;
-}
-
-/*  Botones del modal */
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-/*  Botón de Guardar */
-.modal-buttons button {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
-
-/* Botón "Guardar" con color principal */
-.modal-buttons button[type="submit"] {
-    background-color: #097887;
-    color: white;
-}
-
-.modal-buttons button[type="submit"]:hover {
-    background-color: #029bb6;
-}
-
-/*  Botón "Cancelar" con estilo gris */
-.modal-buttons button[type="button"] {
-    background-color: #ccc;
-    color: #333;
-}
-
-.modal-buttons button[type="button"]:hover {
-    background-color: #bbb;
-}
-.add-stock-btn {
-    background-color: #097887;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .add-stock-btn:hover {
-    background-color: #065d66;
-  }
-  .cancel-stock-btn{
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-
-/*  Responsividad para móviles */
-@media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        padding: 15px;
-    }
-
-    .modal-content input {
-        font-size: 0.9rem;
-    }
-
-    .modal-buttons button {
-        font-size: 0.9rem;
-        padding: 8px 14px;
-    }
-}
-
-
-@media (max-width: 768px) {
     .inventory-container {
-    padding: 10px;
+        padding: 20px;
+    }
+
+    .add-product-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        background-color: #097887;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+
+    .add-product-btn:hover {
+        background-color: #097889;
     }
 
     .search-bar {
-    font-size: 0.9rem;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+    .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .help-btn {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #097887;
+        margin-left: 10px;
+    }
+    
+    .help-btn:hover {
+        color: #029bb6;
+    }
+    
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 16px;
     }
 
-    .add-product-btn,
     .edit-btn,
     .delete-btn {
-    font-size: 0.9rem;
-    padding: 8px 16px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
     }
-}   
+
+    .edit-btn {
+        background-color: #029bb6;
+    }
+
+    .edit-btn:hover:not(:disabled) {
+        background-color: #04a9c6;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+    }
+
+    .delete-btn:hover:not(:disabled) {
+        background-color: #c82333;
+    }
+
+    .edit-btn:disabled,
+    .delete-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    /*  Fondo del modal con opacidad */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    /* Contenedor del modal */
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /*  Animación para el modal */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Estilos del formulario dentro del modal */
+    .modal-content label {
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #097887;
+    }
+
+    .modal-content input {
+        width: 80%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        margin-top: 5px;
+    }
+    /*SELECT*/
+    .modal-content select {
+        width: 80%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        margin-top: 5px;
+        background-color: white;
+        appearance: none; /* Elimina los estilos por defecto en algunos navegadores */
+    }
+    
+    /*  Botones del modal */
+    .modal-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    /*  Botón de Guardar */
+    .modal-buttons button {
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    /* Botón "Guardar" con color principal */
+    .modal-buttons button[type="submit"] {
+        background-color: #097887;
+        color: white;
+    }
+
+    .modal-buttons button[type="submit"]:hover {
+        background-color: #029bb6;
+    }
+
+    /*  Botón "Cancelar" con estilo gris */
+    .modal-buttons button[type="button"] {
+        background-color: #ccc;
+        color: #333;
+    }
+
+    .modal-buttons button[type="button"]:hover {
+        background-color: #bbb;
+    }
+    .add-stock-btn {
+        background-color: #097887;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    
+    .add-stock-btn:hover {
+        background-color: #065d66;
+    }
+    .cancel-stock-btn{
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    /*  Responsividad para móviles */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 95%;
+            padding: 15px;
+        }
+
+        .modal-content input {
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons button {
+            font-size: 0.9rem;
+            padding: 8px 14px;
+        }
+    }
+
+
+    @media (max-width: 768px) {
+        .inventory-container {
+        padding: 10px;
+        }
+
+        .search-bar {
+        font-size: 0.9rem;
+        }
+
+        .add-product-btn,
+        .edit-btn,
+        .delete-btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        }
+    }   

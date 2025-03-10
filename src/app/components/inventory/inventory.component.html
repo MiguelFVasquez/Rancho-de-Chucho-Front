@@ -1,13 +1,23 @@
 <div class="inventory-container">
+  
   <h2>Inventario de Productos</h2>
   <button class="add-product-btn" (click)="onAddProduct()">Agregar Producto</button>
-  <input
-    type="text"
-    placeholder="Buscar producto..."
-    class="search-bar"
-    [(ngModel)]="searchTerm"
-    (input)="onSearch()"
-  />
+  <div class="search-container">
+    <input
+      type="text"
+      placeholder="Buscar producto..."
+      class="search-bar"
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+    <button class="help-btn" (click)="openHelpModal()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="#097887" stroke-width="2" fill="none"/>
+        <path d="M12 8V12M12 16H12.01" stroke="#097887" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    </button>
+  </div>
+
 
   <app-inventory-table [products]="filteredProducts" (rowSelected)="onRowSelected($event)"(stockAdded)="openStockModal($event)"></app-inventory-table>
 
@@ -37,7 +47,12 @@
         <input type="number" formControlName="cantidadDisponible" />
   
         <label>Unidad de medida:</label>
-        <input type="text" formControlName="unidad_medida" />
+        <select formControlName="unidad_medida">
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="ml">ml</option>
+          <option value="l">l</option>
+        </select>
   
         <div class="modal-buttons">
           <button type="submit" [disabled]="productForm.invalid">Guardar</button>
@@ -61,7 +76,12 @@
       <input type="number" id="editPrecio" [(ngModel)]="editProductData.precioCompra">
   
       <label for="editUnidad">Unidad de Medida:</label>
-      <input type="text" id="editUnidad" [(ngModel)]="editProductData.unidad_medida">
+      <select id="editUnidad" [(ngModel)]="editProductData.unidad_medida">
+        <option value="kg">kg</option>
+        <option value="g">g</option>
+        <option value="ml">ml</option>
+        <option value="l">l</option>
+      </select>
   
       <!-- Botones -->
       <div class="modal-buttons">
@@ -97,6 +117,24 @@
       <button class="add-stock-btn" (click)="confirmAddStock()">Agregar</button>
       <button class= "cancel-stock-btn" (click)="closeStockModal()">Cancelar</button>
     </div>
+  </div>  
+</div>
+<!--Modal para las ayudas-->
+<div class="modal" *ngIf="showHelpModal">
+  <div class="modal-content">
+    <h2>Guía de Uso</h2>
+    <ul class="help-list">
+      <li>
+        <a href="https://youtu.be/cxHsVAL0ciU" target="_blank">📌 Guía para agregar un producto</a>
+      </li>
+      <li>
+        <a href="https://youtu.be/io5rFDhANC0" target="_blank">✏️ Guía para editar un producto</a>
+      </li>
+      <li>
+        <a href="https://youtu.be/35zx1E4vEwU" target="_blank">📦 Guía para agregar stock a un producto</a>
+      </li>
+    </ul>
+    <button type="button" class="close-help-btn" (click)="showHelpModal = false">Cerrar</button>
   </div>
 </div>
 </div>

@@ -22,12 +22,12 @@ export class InventoryComponent {
   selectedProduct: productDto | null = null;
   productForm: FormGroup;
   showModal: boolean = false;  
-  showEditModal: boolean = false;
-  showDeleteModal: boolean = false; 
+  showEditModal: boolean = false; //edit modal
+  showDeleteModal: boolean = false; //delete modal
   selectedStockProduct?: productDto;
   stockQuantity: number = 1;
-  showStockModal = false;
-
+  showStockModal = false; 
+  showHelpModal: boolean = false; //Help modal
 
   editProductData: editProduct = {
     id:0,
@@ -192,6 +192,7 @@ export class InventoryComponent {
             this.selectedProduct = null;
             this.showDeleteModal = false;
             showAlert('✅ Producto eliminado correctamente.', 'success');
+            this.loadProducts();
           } else {
             showAlert('❌ Error al eliminar el producto.', 'error');
           }
@@ -233,6 +234,7 @@ export class InventoryComponent {
               showAlert('❌ Error al actualizar stock.', 'error');
             }
             this.closeStockModal();
+            this.loadProducts();
           },
           error: () => {
             showAlert('Error en la solicitud al actualizar stock.', 'error');
@@ -240,5 +242,13 @@ export class InventoryComponent {
           }
         });
     }
+  }
+
+  /*HELP MODAL*/
+  openHelpModal() {
+    this.showHelpModal = true;
+  }
+  closeHelpModal() {
+    this.showHelpModal = false;
   }
 }
