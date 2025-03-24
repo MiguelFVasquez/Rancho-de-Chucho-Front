@@ -1,1 +1,39 @@
-<p>mesero-menu works!</p>
+<div class="mesero-menu-container">
+    <h2>Menú de Platillos</h2>
+
+    <!-- Barra de búsqueda -->
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar platillo..." class="search-bar" />
+
+    <!-- Filtro de categorías -->
+    <div class="category-filter">
+    <label for="category">Filtrar por categoría:</label>
+    <select id="category" [(ngModel)]="selectedCategory">
+        <option value="">Todas</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+    </div>
+
+    <!-- Tabla del menú -->
+    <table class="menu-table">
+    <thead>
+        <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dish of filteredDishes()">
+        <td>{{ dish.name }}</td>
+        <td>{{ dish.description }}</td>
+        <td>${{ dish.price }}</td>
+        <td>
+            <span class="status" [ngClass]="{'available': dish.available, 'not-available': !dish.available}">
+            {{ dish.available ? 'Disponible' : 'No disponible' }}
+            </span>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
