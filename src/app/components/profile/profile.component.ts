@@ -11,25 +11,13 @@ import { Router } from '@angular/router';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  profileForm: FormGroup;
   showPassword = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    //  Inicialización del formulario reactivo con validaciones
-    this.profileForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      cedula: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      username: ['', [Validators.required, Validators.minLength(4)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
-
-
+  constructor(private fb: FormBuilder, private router: Router) {}
     // Alternar visibilidad de la contraseña
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     }
-  
 
     // Función para cerrar sesión y redirigir al login
     logout() {

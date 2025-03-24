@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-
+import { showAlert } from '../../dto/alert';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -39,17 +39,20 @@ export class LoginComponent {
       if (email === 'admin@gmail.com' && password === 'admin1234') {
         //  Redirigir al componente 'administrator' si las credenciales son correctas
         this.router.navigate(['/administrator']);
-      } else {
-        // ⚠️ Mensaje de error si las credenciales son incorrectas
-        this.errorMessage = '❌ Credenciales incorrectas. Inténtalo de nuevo.';
+      } else if(email === 'mesero@gmail.com' && password === 'mesero1234'){
+          //Redirigir al componente 'Mesero' 
+          this.router.navigate(['/mesero']);
+      }else {
+        //  Mensaje de error si las credenciales son incorrectas
+        showAlert('Credenciales incorrectas. Inténtalo de nuevo.');
       }
     } else {
-      // ⚡ Mensaje de error si faltan campos por completar
-      this.errorMessage = '⚠️ Por favor, completa todos los campos correctamente.';
+      //  Mensaje de error si faltan campos por completar
+      showAlert(' Por favor, completa todos los campos correctamente.');
     }
   }
 
-  // 🧹 Método para limpiar el mensaje de error al modificar los campos
+  // Método para limpiar el mensaje de error al modificar los campos
   clearError() {
     this.errorMessage = '';
   }
