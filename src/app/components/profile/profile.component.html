@@ -1,41 +1,38 @@
-<!-- profile.component.html -->
 <div class="profile-container">
-<h2>Mi Perfil</h2>
-<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-    <div class="form-group">
-    <label for="name">Nombre</label>
-    <input id="name" type="text" formControlName="name" placeholder="Ingresa tu nombre" />
-    <div class="error" *ngIf="name?.invalid && name?.touched">
-        <small *ngIf="name?.errors?.['required']">El nombre es obligatorio.</small>
+    <h2>Mi Perfil</h2>
+    <div class="profile-form">
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input id="name" type="text" [value]="'Juan Esteban'" disabled />
+      </div>
+  
+      <div class="form-group">
+        <label for="id">Cédula</label>
+        <input id="id" type="text" [value]="'1010101010'" disabled />
+      </div>
+  
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input id="username" type="text" [value]="'admin@gmail.com'" disabled />
+      </div>
+  
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="password-container">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [value]="'admin1234'"
+            disabled
+          />
+          <span class="toggle-password" (click)="togglePasswordVisibility()">
+            {{ showPassword ? '🤫':'👁️'  }}
+          </span>
+        </div>
+      </div>
     </div>
-    </div>
-
-    <div class="form-group">
-    <label for="id">Cédula</label>
-    <input id="id" type="text" formControlName="cedula" placeholder="Ingresa tu cédula" />
-    <div class="error" *ngIf="id?.invalid && id?.touched">
-        <small *ngIf="id?.errors?.['required']">La cédula es obligatoria.</small>
-    </div>
-    </div>
-
-    <div class="form-group">
-    <label for="username">Usuario</label>
-    <input id="username" type="text" formControlName="username" placeholder="Ingresa tu usuario" />
-    <div class="error" *ngIf="username?.invalid && username?.touched">
-        <small *ngIf="username?.errors?.['required']">El usuario es obligatorio.</small>
-    </div>
-    </div>
-
-    <div class="form-group">
-    <label for="password">Contraseña</label>
-    <input id="password" type="password" formControlName="password" placeholder="Ingresa tu contraseña" />
-    <div class="error" *ngIf="password?.invalid && password?.touched">
-        <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria.</small>
-        <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres.</small>
-    </div>
-    </div>
-
-    <!--    
-    <button type="submit" [disabled]="profileForm.invalid">Guardar Cambios</button>-->  
-</form>
-</div>
+  
+    <!-- Botón de Cerrar Sesión -->
+    <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+  </div>
+  
