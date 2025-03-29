@@ -1,1 +1,36 @@
-<p>mesero-orden works!</p>
+<div class="orden-container">
+    <!-- Botón de Iniciar Orden (Siempre visible) -->
+    <button class="btn-iniciar" (click)="abrirModal()">Iniciar Orden</button>
+  
+    <!-- Contenedor de órdenes en fila -->
+    <div class="ordenes-list">
+      <div *ngFor="let orden of ordenesPaginadas" class="orden-card-container">
+        <app-orden-card [orden]="orden"></app-orden-card>
+      </div>
+    </div>
+  
+    <!-- Paginador -->
+    <div class="paginador">
+      <button (click)="retrocederPagina()" [disabled]="paginaActual === 0">Anterior</button>
+      <span>Página {{ paginaActual + 1 }} de {{ totalPaginas }}</span>
+      <button (click)="avanzarPagina()" [disabled]="paginaActual + 1 >= totalPaginas">Siguiente</button>
+    </div>
+  </div>
+  
+  <!-- Modal para nueva orden -->
+  <div class="modal" *ngIf="mostrarModal">
+    <div class="modal-content">
+      <h2>Nueva Orden</h2>
+  
+      <div *ngFor="let platillo of platillosSeleccionados; let i = index" class="platillo-group">
+        <input type="text" [(ngModel)]="platillo.nombre" placeholder="Nombre del platillo">
+        <input type="number" [(ngModel)]="platillo.cantidad" min="1" placeholder="Cantidad">
+        <button (click)="eliminarPlatillo(i)">❌</button>
+      </div>
+  
+      <button (click)="agregarPlatillo()">Agregar Platillo</button>
+      <button (click)="confirmarOrden()">Confirmar Orden</button>
+      <button (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+  

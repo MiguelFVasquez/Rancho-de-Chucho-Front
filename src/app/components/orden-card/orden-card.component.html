@@ -1,0 +1,7 @@
+<div class="orden-card">
+    <h3>{{ orden.mesa }}</h3>
+    <p>ID Orden: {{ orden.id }}</p>
+    <p>Estado: <span [ngClass]="orden.estado | lowercase">{{ orden.estado }}</span></p>
+    <button class="detalles-btn">Ver Detalles</button>
+  </div>
+  

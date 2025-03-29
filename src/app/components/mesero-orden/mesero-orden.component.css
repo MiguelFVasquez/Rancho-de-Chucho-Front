@@ -1,0 +1,234 @@
+/* Contenedor principal */
+.orden-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Botón de iniciar orden */
+.btn-iniciar {
+  background-color: #097887;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.btn-iniciar:hover {
+  background-color: #065f6a;
+}
+
+/* Contenedor de órdenes */
+.ordenes-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Permite que las órdenes se acomoden en varias filas si no caben */
+  gap: 40px;
+  padding: 2rem 1rem;
+}
+
+.orden-card-container {
+  flex: 0 1 calc(25% - 40px); /* Ajusta el cálculo por el nuevo gap */
+  width: 250px;
+  margin: 10px 0; /* Agrega margen vertical */
+}
+
+/* 🔹 Responsive para tablets y móviles 🔹 */
+@media (max-width: 1024px) {
+  .orden-card-container {
+    flex: 0 1 calc(50% - 40px); /* Ajuste para 2 columnas */
+  }
+}
+
+@media (max-width: 600px) {
+  .orden-card-container {
+    flex: 0 1 calc(100% - 40px); /* Ajuste para 1 columna */
+  }
+}
+
+/* 🔹 Paginador 🔹 */
+.paginador {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginador button {
+  background-color: #097887;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.paginador button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.paginador span {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* 🔹 Modal 🔹 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem; /* Asegura que haya espacio en pantallas pequeñas */
+}
+
+/* Contenido del modal */
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%; /* Evita que el modal sea demasiado grande en móviles */
+  text-align: center;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* 🔹 Responsive para móviles 🔹 */
+@media (max-width: 500px) {
+  .modal-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Contenedor de platillos */
+.platillo-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  flex-wrap: wrap; /* Permite que los inputs se acomoden mejor en pantallas pequeñas */
+}
+
+.platillo-group input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;.orden-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .btn-iniciar {
+    background-color: #097887;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 1rem;
+  }
+  
+  .btn-iniciar:hover {
+    background-color: #065f6a;
+  }
+  
+  /* Contenedor de órdenes con espaciado lateral */
+  .ordenes-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espaciado entre órdenes */
+    padding: 1rem;
+  }
+  
+  .orden-card-container {
+    flex: 0 0 auto;
+    width: 250px; /* Ancho de cada orden */
+  }
+  
+  /* Paginador */
+  .paginador {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .paginador button {
+    background-color: #097887;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .paginador button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .paginador span {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  border-radius: 5px;
+  width: 100px;
+}
+
+/* Ajuste de inputs en móviles */
+@media (max-width: 400px) {
+  .platillo-group input {
+    width: 100%;
+  }
+}
+
+/* Botones del modal */
+.modal-content button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.modal-content button:first-child {
+  background-color: #097887;
+  color: white;
+}
+
+.modal-content button:first-child:hover {
+  background-color: #065f6a;
+}
+
+.modal-content button:last-child {
+  background-color: #ff4c4c;
+  color: white;
+}
+
+.modal-content button:last-child:hover {
+  background-color: #c0392b;
+}
