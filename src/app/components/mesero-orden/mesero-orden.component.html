@@ -17,20 +17,31 @@
     </div>
   </div>
   
-  <!-- Modal para nueva orden -->
-  <div class="modal" *ngIf="mostrarModal">
+<!-- Modal para nueva orden -->
+<div class="modal" *ngIf="mostrarModal">
     <div class="modal-content">
       <h2>Nueva Orden</h2>
   
+      <!-- Selección de platillos -->
       <div *ngFor="let platillo of platillosSeleccionados; let i = index" class="platillo-group">
-        <input type="text" [(ngModel)]="platillo.nombre" placeholder="Nombre del platillo">
-        <input type="number" [(ngModel)]="platillo.cantidad" min="1" placeholder="Cantidad">
-        <button (click)="eliminarPlatillo(i)">❌</button>
+        <select [(ngModel)]="platillo.nombre" class="select-platillo">
+          <option value="" disabled selected>Seleccione un platillo</option>
+          <option *ngFor="let item of menuPlatos" [value]="item.nombre">{{ item.nombre }}</option>
+        </select>
+        <input type="number" [(ngModel)]="platillo.cantidad"
+        min="1" class="input-cantidad"
+        (keypress)="validarTecla($event)"
+        (input)="validarCantidad(i)">
+
+        <button (click)="eliminarPlatillo(i)" class="btn-eliminar">❌</button>
+
+          <!-- Mensaje de error -->
+        <p *ngIf="errores[i]" class="error-msg">{{ errores[i] }}</p>
       </div>
   
-      <button (click)="agregarPlatillo()">Agregar Platillo</button>
-      <button (click)="confirmarOrden()">Confirmar Orden</button>
-      <button (click)="cerrarModal()">Cerrar</button>
+      <button (click)="agregarPlatillo()" class="btn-agregar">Agregar Platillo</button>
+      <button (click)="confirmarOrden()" class="btn-confirmar">Confirmar Orden</button>
+      <button (click)="cerrarModal()" class="btn-cerrar">Cerrar</button>
     </div>
   </div>
   
