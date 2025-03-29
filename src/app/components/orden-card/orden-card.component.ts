@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input,Output } from '@angular/core';
 
 @Component({
   selector: 'app-orden-card',
@@ -9,5 +9,10 @@ import { Component, Input } from '@angular/core';
   styleUrl: './orden-card.component.css'
 })
 export class OrdenCardComponent {
-  @Input() orden!: { id: number; mesa: string; estado: string };
+  @Input() orden: any;
+  @Output() verDetalles = new EventEmitter<any>();
+  
+  abrirDetalles() {
+    this.verDetalles.emit(this.orden);
+  }
 }

@@ -3,14 +3,16 @@ import { OrdenCardComponent } from '../orden-card/orden-card.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { showAlert } from '../../dto/alert';
+import { DetailOrderComponent } from '../detail-orden/detail-orden.component';
 @Component({
   selector: 'app-mesero-orden',
   standalone: true,
-  imports: [CommonModule, FormsModule, OrdenCardComponent],
+  imports: [CommonModule, FormsModule, OrdenCardComponent, DetailOrderComponent],
   templateUrl: './mesero-orden.component.html',
   styleUrl: './mesero-orden.component.css'
 })
 export class MeseroOrdenComponent {
+
   ordenes:any = [{ id: 1, mesa: "Mesa 1", estado: "En proceso", platillos: [{ nombre: "Tacos", cantidad: 2 }] },
   { id: 2, mesa: "Mesa 2", estado: "Pendiente", platillos: [{ nombre: "Burritos", cantidad: 1 }] },
   { id: 3, mesa: "Mesa 3", estado: "En proceso", platillos: [{ nombre: "Enchiladas", cantidad: 3 }] },
@@ -21,7 +23,7 @@ export class MeseroOrdenComponent {
   platillosSeleccionados: { nombre: string; cantidad: number }[] = [];
   paginaActual = 0;
   ordenesPorPagina = 4;
-
+  ordenSeleccionada: any = null;
   errores: string[] = [];
   //Simulación del menú.
   menuPlatos = [
@@ -95,6 +97,11 @@ export class MeseroOrdenComponent {
     if (!/^\d$/.test(teclaPresionada)) {
       event.preventDefault();
     }
+  }
+
+//-----------DETAIL ORDER-------------
+  abrirDetalleOrden(orden: any) {
+    this.ordenSeleccionada = orden;
   }
   
 //-----------PAGINACIÓN DE LAS ORDENES-----------

@@ -5,8 +5,7 @@
     <!-- Contenedor de órdenes en fila -->
     <div class="ordenes-list">
       <div *ngFor="let orden of ordenesPaginadas" class="orden-card-container">
-        <app-orden-card [orden]="orden"></app-orden-card>
-      </div>
+        <app-orden-card [orden]="orden" (verDetalles)="abrirDetalleOrden($event)"></app-orden-card>      </div>
     </div>
   
     <!-- Paginador -->
@@ -16,6 +15,12 @@
       <button (click)="avanzarPagina()" [disabled]="paginaActual + 1 >= totalPaginas">Siguiente</button>
     </div>
   </div>
+
+<!-- Modal de Detalle de Orden -->
+<app-detail-order *ngIf="ordenSeleccionada" 
+  [orden]="ordenSeleccionada" 
+  (cerrarDetalle)="ordenSeleccionada = null">
+</app-detail-order>
   
 <!-- Modal para nueva orden -->
 <div class="modal" *ngIf="mostrarModal">

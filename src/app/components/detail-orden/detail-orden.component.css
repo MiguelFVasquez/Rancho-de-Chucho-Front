@@ -1,0 +1,59 @@
+/* Fondo del modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  /* Contenedor del modal */
+  .modal-content {
+    background: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  /* Lista de platillos */
+  .platillos-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .platillos-list li {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Botón de cerrar */
+  .btn-cerrar {
+    background: #097887;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  
+  .btn-cerrar:hover {
+    background: #065f6a;
+  }
+  
+  /* Responsivo */
+  @media (max-width: 480px) {
+    .modal-content {
+      width: 95%;
+    }
+  }
+  

@@ -35,7 +35,7 @@ export const routes: Routes = [
             { path : '', redirectTo: 'profile', pathMatch: 'full'},
             {path: 'profile', component:ProfileComponent},
             {path: 'menu', component:MeseroMenuComponent},
-            {path: 'order', component:MeseroOrdenComponent }
+            {path: 'order', component:MeseroOrdenComponent}
         ]
 
     },

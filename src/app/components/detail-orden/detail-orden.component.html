@@ -1,0 +1,17 @@
+<div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Detalle de Orden #{{ orden.id }}</h2>
+      <p><strong>Mesa:</strong> {{ orden.mesa }}</p>
+      <p><strong>Estado:</strong> {{ orden.estado }}</p>
+  
+      <h3>Platillos:</h3>
+      <ul class="platillos-list">
+        <li *ngFor="let platillo of orden.platillos">
+          {{ platillo.nombre }} - <strong>{{ platillo.cantidad }}</strong>
+        </li>
+      </ul>
+  
+      <button class="btn-cerrar" (click)="cerrar()">Cerrar</button>
+    </div>
+  </div>
+  
