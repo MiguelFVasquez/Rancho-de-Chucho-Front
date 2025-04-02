@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DishDto } from '../../dto/dish/dishdto';
+import { platoReadDto } from '../../dto/dish/dishdto';
 import { DishDetailDto } from '../../dto/dish/dishDetailDto';
 
 
@@ -12,8 +12,8 @@ import { DishDetailDto } from '../../dto/dish/dishDetailDto';
   styleUrl: './menu-card.component.css'
 })
 export class MenuCardComponent {
-  @Input() dish!: DishDto;
-  @Output() viewDetail = new EventEmitter<DishDto>();
+  @Input() dish!: platoReadDto;
+  @Output() viewDetail = new EventEmitter<platoReadDto>();
 
   onCardClick() {
   this.viewDetail.emit(this.dish);

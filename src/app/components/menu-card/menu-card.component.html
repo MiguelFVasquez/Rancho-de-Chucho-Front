@@ -1,7 +1,6 @@
 <div class="card-container" (click)="onCardClick()">
-    <img [src]="dish.image" [alt]="dish.name" class="dish-image" />
-    <h3>{{ dish.name }}</h3>
-    <p>Precio: ${{ dish.price | number:'1.0-0' }}</p>
+    <h3>{{ dish.nombre }}</h3>
+    <p>Precio: ${{ dish.precio | number:'1.0-0' }}</p>
     <div class="button-group">
       <button class="edit-button" (click)="onEdit()">
         <img src="edit.png" alt="Editar" class="icon" />

@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuCardComponent } from '../menu-card/menu-card.component';
-import { DishDto } from '../../dto/dish/dishdto';
+import { platoReadDto } from '../../dto/dish/dishdto';
 import { FormsModule } from '@angular/forms';
 import { DishDetailDto } from '../../dto/dish/dishDetailDto';
 import { MenuDetailComponent } from "../menu-detail/menu-detail.component";
+import { PlatoService } from '../../services/plato.service';
+import { MessageDTO } from '../../dto/messageDto';
+import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
+import { showAlert } from '../../dto/alert';
 
 @Component({
   selector: 'app-menu',
@@ -13,54 +17,73 @@ import { MenuDetailComponent } from "../menu-detail/menu-detail.component";
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
-export class MenuComponent {
-  dishes: DishDto[] = [
-    { id: 1, name: 'Tacos al Pastor', price: 25000, image: 'tacosP.png', category: 'Platos Fuertes' },
-    { id: 2, name: 'Frijoles con chicharron', price: 22000, image: 'frijoles.png', category: 'Platos Fuertes' },
-    { id: 3, name: 'Sancocho', price: 18000, image: 'sancocho.png', category: 'Platos Fuertes' },
-    { id: 4, name: 'Bandeja paisa', price: 20000, image: 'bandeja.png', category: 'Platos Fuertes' },
-    { id: 5, name: 'Empanadas', price: 12000, image: 'empanadas.png', category: 'Snack' },
-    { id: 6, name: 'Arroz con leche', price: 8000, image: 'arrozConLeche.png', category: 'Postres' },
-  ];
-
+export class MenuComponent implements OnInit {
+  
+  dishes: platoReadDto[] = [];
+  filteredDishes: platoReadDto[] = [];
+  paginatedDishes: platoReadDto[] = [];
   categories: string[] = ['Platos Fuertes', 'Bebidas', 'Snack', 'Postres'];
+
+
   selectedCategory: string = '';
-  filteredDishes: DishDto[] = [...this.dishes];
-  paginatedDishes: DishDto[] = [];
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 4;
   totalPages: number = 1;
   showCategoryDialog: boolean = false;
+  selectedDishDetail: platoReadDto | null = null;
+
+  //State to edit
+  editingDish: PlatoUpdate | null = null;
+  editingDishId: number | null = null;
+  showEditModal: boolean = false;
 
   /**TO DETAIL */
   //Descrptions simulated
-  private getDishDescription(name: string): string {
-    const descriptions: { [key: string]: string } = {
-      'Tacos al Pastor': 'Tacos tradicionales con carne adobada al estilo pastor.',
-      'Frijoles con chicharron': 'Frijoles acompañados de crujiente chicharrón.',
-      'Sancocho': 'Sopa tradicional con variedad de carnes y verduras.',
-      'Bandeja paisa': 'Plato típico con arroz, frijoles, chicharrón y más.',
-      'Empanadas': 'Empanadas rellenas de carne y papa con ají casero.',
-      'Arroz con leche': 'Postre cremoso a base de arroz y leche con canela.',
-    };
-    return descriptions[name] || 'Descripción no disponible.';
-  }
-  selectedDishDetail: DishDetailDto | null = null; /**To detail dish */
-  
-  onViewDetail(dish: DishDto) {
-    this.selectedDishDetail = {
-      ...dish,
-      description: this.getDishDescription(dish.name),
-    };
+
+  // private getDishDescription(name: string): string {
+  //   const descriptions: { [key: string]: string } = {
+  //     'Tacos al Pastor': 'Tacos tradicionales con carne adobada al estilo pastor.',
+  //     'Frijoles con chicharron': 'Frijoles acompañados de crujiente chicharrón.',
+  //     'Sancocho': 'Sopa tradicional con variedad de carnes y verduras.',
+  //     'Bandeja paisa': 'Plato típico con arroz, frijoles, chicharrón y más.',
+  //     'Empanadas': 'Empanadas rellenas de carne y papa con ají casero.',
+  //     'Arroz con leche': 'Postre cremoso a base de arroz y leche con canela.',
+  //   };
+  //   return descriptions[name] || 'Descripción no disponible.';
+  // }
+  constructor(private platoService: PlatoService) {
+    this.updatePagination();
   }
 
+  ngOnInit(): void {
+    this.getAllDishes();
+  }
+
+  //Method to get all dishes 
+  getAllDishes(): void {
+    this.platoService.getAllDishs().subscribe({
+      next: (response: MessageDTO<platoReadDto[]>) => {
+        if (!response.error) {
+          this.dishes = response.respuesta; 
+          this.onSearch();
+        } else {
+          console.error('Error obteniendo platos:', response);
+        }
+      },
+      error: (err) => {
+        console.error('Error en la petición:', err);
+      },
+    });
+  }
+
+  //detail of the dish
+  onViewDetail(dish: platoReadDto) {
+    this.selectedDishDetail = dish;
+  }
+  //Close detail view
   onCloseDetail() {
     this.selectedDishDetail = null;
-  }
-
-  constructor() {
-    this.updatePagination();
   }
 
   openCategoryDialog(): void {
@@ -81,8 +104,8 @@ export class MenuComponent {
     const term = this.searchTerm.trim().toLowerCase();
     this.filteredDishes = this.dishes.filter(
       (dish) =>
-        dish.name.toLowerCase().includes(term) &&
-        (this.selectedCategory ? dish.category === this.selectedCategory : true)
+        dish.nombre.toLowerCase().includes(term) &&
+        (this.selectedCategory ? dish.tipo_plato === this.selectedCategory : true)
     );
     this.currentPage = 1;
     this.updatePagination();
@@ -109,12 +132,73 @@ export class MenuComponent {
     }
   }
 
-  onEditDish(dish: DishDto): void {
-    console.log('Editar platillo:', dish);
+  //Solo por pruebas temporales: 
+    // Simulación de mapeo de tipos de plato a IDs (debería venir del backend)
+    tipoPlatoMap: { [key: string]: number } = {
+      'Platos Fuertes': 1,
+      'Bebidas': 2,
+      'Snack': 3,
+      'Postres': 4
+    };
+ 
+  onEditDish(dish: platoReadDto): void {
+    this.editingDishId = dish.id;
+    this.editingDish = { 
+      nombre: dish.nombre,
+      precio: dish.precio,
+      id_tipo_plato: this.tipoPlatoMap[dish.tipo_plato] || 0 ,
+      descripcion: dish.descripcion
+    };
+    this.showEditModal = true;
   }
 
-  onDeleteDish(dish: DishDto): void {
-    this.dishes = this.dishes.filter((d) => d.id !== dish.id);
-    this.onSearch(); // Actualizar filtrado y paginación tras eliminar
+
+  onSaveEdit(): void {
+    if (this.editingDishId !== null && this.editingDish) {
+      this.platoService.editPlato(this.editingDishId, this.editingDish).subscribe({
+        next: (response: MessageDTO<platoReadDto>) => {
+          if (!response.error) {
+            console.log('Plato actualizado correctamente:', response.respuesta);
+            showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
+            
+            // Actualizar la lista de platos
+            const index = this.dishes.findIndex(d => d.id === response.respuesta.id);
+            if (index !== -1) {
+              this.dishes[index] = response.respuesta;
+              this.onSearch(); // Actualizar la vista
+            }
+            this.showEditModal = false;
+          } else {
+            console.error('Error al actualizar el plato:', response);
+            showAlert('❌ Error al editar el plato.', 'error');
+          }
+        },
+        error: (err) => {
+          console.error('Error en la actualización:', err);
+        },
+      });
+    }
+  }
+
+  //Method to connect with the service to delete a specific dish
+  onDeleteDish(dish: platoReadDto): void {
+    if (confirm(`¿Seguro que quieres eliminar ${dish.nombre}?`)) {
+      this.platoService.deletePlato(dish.id).subscribe({
+        next: (response: MessageDTO<boolean>) => {
+          if (!response.error && response.respuesta) {
+            console.log(`Plato ${dish.nombre} eliminado correctamente.`);
+            showAlert(`✅ Plato ${dish.nombre} eliminado correctamente: ${response.respuesta}`, 'success');
+            this.dishes = this.dishes.filter((d) => d.id !== dish.id);
+            this.onSearch(); // Actualizar lista
+          } else {
+            console.error('Error al eliminar el plato:', response);
+            showAlert('❌ Error al eliminar el plato.', 'error');
+          }
+        },
+        error: (err) => {
+          console.error('Error en la eliminación:', err);
+        },
+      });
+    }
   }
 }

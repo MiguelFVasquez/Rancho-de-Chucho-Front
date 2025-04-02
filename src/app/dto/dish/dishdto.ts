@@ -1,9 +1,9 @@
-// dish.dto.ts
-export interface DishDto {
+// Interface to represent 'platoReadDto' from backend
+export interface platoReadDto {
     id: number;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    tipo_plato: string;
   }
   

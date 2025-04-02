@@ -1,11 +1,10 @@
 <div class="detail-container" *ngIf="selectedDish">
   <div class="detail-card">
     <button class="close-btn" (click)="closeDetailView()">Cerrar</button>
-    <img [src]="selectedDish.image" [alt]="selectedDish.name" class="dish-image" />
     <div class="dish-info">
-      <h2>{{ selectedDish.name }}</h2>
-      <p class="dish-description">{{ selectedDish.description }}</p>
-      <p class="dish-price">Precio: ${{ selectedDish.price | number:'1.0-0' }}</p>
+      <h2>{{ selectedDish.nombre }}</h2>
+      <p class="dish-description">{{ selectedDish.descripcion }}</p>
+      <p class="dish-price">Precio: ${{ selectedDish.precio | number:'1.0-0' }}</p>
     </div>
   </div>
 </div>
