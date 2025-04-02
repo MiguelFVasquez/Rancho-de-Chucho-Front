@@ -9,6 +9,7 @@ import { PlatoService } from '../../services/plato.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
 import { showAlert } from '../../dto/alert';
+import { platoCreate } from '../../dto/dish/PlatoCreateDto';
 
 @Component({
   selector: 'app-menu',
@@ -32,6 +33,16 @@ export class MenuComponent implements OnInit {
   totalPages: number = 1;
   showCategoryDialog: boolean = false;
   selectedDishDetail: platoReadDto | null = null;
+  //State to add
+  showAddDishModal: boolean = false;
+
+  newDish: platoCreate = {
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    id_tipo_plato: 1 // Valor inicial por defecto
+  };
+
 
   //State to edit
   editingDish: PlatoUpdate | null = null;
@@ -110,7 +121,7 @@ export class MenuComponent implements OnInit {
     this.currentPage = 1;
     this.updatePagination();
   }
-
+  //----------PAGINATION----------------
   updatePagination(): void {
     this.totalPages = Math.ceil(this.filteredDishes.length / this.itemsPerPage) || 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -132,6 +143,36 @@ export class MenuComponent implements OnInit {
     }
   }
 
+//----------add---------
+
+  openAddDishModal(): void {
+    this.showAddDishModal = true;
+  }
+
+  closeAddDishModal(): void {
+    this.showAddDishModal = false;
+  }
+
+  addNewDish(): void {
+    if (!this.newDish.nombre || !this.newDish.descripcion || this.newDish.precio <= 0) {
+      alert('Todos los campos son obligatorios.');
+      return;
+    }
+
+    this.platoService.savePlato(this.newDish).subscribe(response => {
+      if (!response.error) {
+        this.dishes.push({ id: Date.now(), ...this.newDish, tipo_plato: this.categories[this.newDish.id_tipo_plato - 1] });
+        this.onSearch();
+        showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
+        this.closeAddDishModal();
+      } else {
+        alert('Error al agregar el platillo.');
+      }
+    });
+  
+  }
+
+//---------edit-------------  
   //Solo por pruebas temporales: 
     // Simulación de mapeo de tipos de plato a IDs (debería venir del backend)
     tipoPlatoMap: { [key: string]: number } = {

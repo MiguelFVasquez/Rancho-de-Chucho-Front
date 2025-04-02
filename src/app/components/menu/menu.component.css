@@ -144,6 +144,113 @@
   background-color: #075e6a;
 }
 
+.add-dish-btn {
+  display: block;
+  margin: 10px 0;
+  background-color:  #097887;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Fondo oscuro translúcido */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor del modal */
+.modal {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Espaciado entre elementos */
+.modal h3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.modal label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.modal input,
+.modal textarea,
+.modal select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* Efectos al enfocar los inputs */
+.modal input:focus,
+.modal textarea:focus,
+.modal select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Botones alineados con espacio */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Estilos para botones */
+.modal-buttons button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Botón Guardar */
+.modal-buttons button[type="submit"] {
+  background-color:  #097887;
+  color: white;
+}
+
+.modal-buttons button[type="submit"]:hover {
+  background-color:  #035863;
+}
+
+/* Botón Cancelar */
+.modal-buttons button[type="button"] {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-buttons button[type="button"]:hover {
+  background-color: #c82333;
+}
+
+
+
+
 @media (max-width: 768px) {
   .search-bar,
   .category-btn {

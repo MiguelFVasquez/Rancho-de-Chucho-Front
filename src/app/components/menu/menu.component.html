@@ -1,5 +1,9 @@
 <div class="menu-container">
+  
   <h2>Menú</h2>
+    <!-- Botón para agregar un nuevo platillo (posicionado correctamente) -->
+  <button class="add-dish-btn" (click)="openAddDishModal()">Agregar un nuevo platillo</button>
+
   <input type="text" placeholder="Buscar platillo..." class="search-bar" [(ngModel)]="searchTerm" (input)="onSearch()" />
 
   <button class="category-btn" (click)="openCategoryDialog()">Seleccionar Categoría</button>
@@ -31,4 +35,33 @@
   </div>
 
   <app-menu-detail *ngIf="selectedDishDetail" [selectedDish]="selectedDishDetail" (closeDetail)="onCloseDetail()"></app-menu-detail>
+
+   <!-- Modal para agregar un nuevo platillo -->
+  <div class="modal-overlay" *ngIf="showAddDishModal">
+    <div class="modal">
+      <h3>Agregar Nuevo Platillo</h3>
+      <form (ngSubmit)="addNewDish()">
+        <label>Nombre:</label>
+        <input type="text" [(ngModel)]="newDish.nombre" name="nombre" required />
+
+        <label>Descripción:</label>
+        <textarea [(ngModel)]="newDish.descripcion" name="descripcion" required></textarea>
+
+        <label>Precio:</label>
+        <input type="number" [(ngModel)]="newDish.precio" name="precio" required />
+
+        <label>Categoría:</label>
+        <select [(ngModel)]="newDish.id_tipo_plato" name="id_tipo_plato" required>
+          <option *ngFor="let category of categories; let i = index" [value]="i + 1">
+            {{ category }}
+          </option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit">Guardar</button>
+          <button type="button" (click)="closeAddDishModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
