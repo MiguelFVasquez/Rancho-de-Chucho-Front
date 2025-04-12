@@ -80,6 +80,13 @@ export class MeseroOrdenComponent {
     showAlert(`✅ Orden creada con éxito`, 'success');
     this.cerrarModal();
   }
+//-------------CANCELAR UNA ORDEN-----
+  cancelarOrdenDesdePadre(id: number) {
+    // Se maneja el cambio de estado en base al id recibido desde el componente hijo
+    console.log('Se canceló la orden con ID:', id);
+    this.ordenSeleccionada = null; // Cerrar el modal si quieres
+  }
+
   
 //-----------Función para validar que los valores ingresados en la cantidad sean datos validos.-----
   validarCantidad(index: number) {

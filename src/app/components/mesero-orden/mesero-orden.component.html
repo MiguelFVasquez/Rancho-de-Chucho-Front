@@ -17,10 +17,13 @@
   </div>
 
 <!-- Modal de Detalle de Orden -->
-<app-detail-order *ngIf="ordenSeleccionada" 
-  [orden]="ordenSeleccionada" 
-  (cerrarDetalle)="ordenSeleccionada = null">
+<app-detail-order
+  *ngIf="ordenSeleccionada"
+  [orden]="ordenSeleccionada"
+  (cerrarDetalle)="ordenSeleccionada = null"
+  (ordenCancelada)="cancelarOrdenDesdePadre($event)">
 </app-detail-order>
+
   
 <!-- Modal para nueva orden -->
 <div class="modal" *ngIf="mostrarModal">

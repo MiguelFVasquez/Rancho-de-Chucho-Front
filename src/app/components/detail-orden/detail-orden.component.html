@@ -11,7 +11,12 @@
         </li>
       </ul>
   
-      <button class="btn-cerrar" (click)="cerrar()">Cerrar</button>
+        <!-- Botones -->
+      <div class="botones-detalle">
+        <button class="btn-editar" (click)="editarOrden()">Editar Orden</button>
+        <button class="btn-cancelar" (click)="cancelarOrden()">Cancelar Orden</button>
+        <button class="btn-cerrar" (click)="cerrarDetalle.emit()">Cerrar</button>
+      </div>
     </div>
   </div>
   
