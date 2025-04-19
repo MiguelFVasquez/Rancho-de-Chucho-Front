@@ -112,8 +112,8 @@ export class InventoryComponent {
         next: (response: MessageDTO) => {
           console.log("✅ Respuesta del backend:", response);
 
-          // ✅ Invertimos la lógica, ahora 'error: true' significa éxito
-          if (response.error) {
+          // Invertimos la lógica, ahora 'error: true' significa éxito
+          if (!response.error) {
             this.showModal = false;
             showAlert(`✅ Producto agregado con ID: ${response.respuesta}`, 'success');
             this.loadProducts();

@@ -11,18 +11,21 @@
   margin-bottom: 16px;
 }
 
-.category-btn {
-  padding: 12px 20px;
-  border-radius: 8px;
-  border: none;
-  background-color: #097887;
-  color: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-  margin-bottom: 16px;
-  width: 100%;
-  max-width: 250px;
+.category-filter {
+  margin-bottom: 1rem;
+}
+
+.category-filter label {
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.category-filter select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #eee;
 }
 
 .category-btn:hover {
@@ -145,15 +148,25 @@
 }
 
 .add-dish-btn {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 10px 0;
-  background-color:  #097887;
+  background-color: #097887;
   color: white;
   padding: 10px 15px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s;
 }
+
+.add-dish-btn:hover {
+  background-color: #075e6a;
+}
+
 
 /* Fondo oscuro translúcido */
 .modal-overlay {

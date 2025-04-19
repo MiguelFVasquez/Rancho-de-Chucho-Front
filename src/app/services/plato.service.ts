@@ -10,7 +10,7 @@ import { platoReadDto } from '../dto/dish/dishdto';
   providedIn: 'root'
 })
 export class PlatoService {
-  private apiURL = 'http://localhost:8080/api/plato';  
+  private apiURL = 'http://localhost:8086/api/plato';  
   
   constructor(private http:HttpClient) { }
 
@@ -32,6 +32,6 @@ export class PlatoService {
   deletePlato(id:number):Observable<MessageDTO>{
     return this.http.delete<MessageDTO>(`${this.apiURL}/${id}/delete` );
   }
-
+  
 
 }

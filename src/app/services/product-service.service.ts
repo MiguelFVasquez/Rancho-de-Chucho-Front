@@ -10,7 +10,7 @@ import { productDto } from '../dto/product/productDto';
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiURL = 'http://localhost:8080/api/ingrediente';  
+  private apiURL = 'http://localhost:8086/api/ingrediente';  
 
   constructor(private http: HttpClient) {}
 

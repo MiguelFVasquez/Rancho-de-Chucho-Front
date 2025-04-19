@@ -3,9 +3,9 @@
   </header>
   
   <div class="login-container">
-    <app-login></app-login> <!-- 💡 Se carga el login directamente -->
+    <app-login></app-login> <!-- Se carga el login directamente -->
   </div>
-  <!-- 💡 Footer cargado solo cuando se visualiza -->
+  <!-- Footer cargado solo cuando se visualiza -->
 <ng-container *ngIf="!esLoginPage">
     <ng-template [ngIf]="footerVisible">
       <footer class="footer">

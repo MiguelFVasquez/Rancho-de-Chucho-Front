@@ -10,6 +10,8 @@ import { MessageDTO } from '../../dto/messageDto';
 import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
 import { showAlert } from '../../dto/alert';
 import { platoCreate } from '../../dto/dish/PlatoCreateDto';
+import { TipoPlatoService } from '../../services/tipo-plato.service';
+import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
 
 @Component({
   selector: 'app-menu',
@@ -23,7 +25,7 @@ export class MenuComponent implements OnInit {
   dishes: platoReadDto[] = [];
   filteredDishes: platoReadDto[] = [];
   paginatedDishes: platoReadDto[] = [];
-  categories: string[] = ['Platos Fuertes', 'Bebidas', 'Snack', 'Postres'];
+  categories: kindDishRead[] = [];
 
 
   selectedCategory: string = '';
@@ -40,8 +42,9 @@ export class MenuComponent implements OnInit {
     nombre: '',
     descripcion: '',
     precio: 0,
-    id_tipo_plato: 1 // Valor inicial por defecto
+    id_tipo_plato: null
   };
+  
 
 
   //State to edit
@@ -49,27 +52,39 @@ export class MenuComponent implements OnInit {
   editingDishId: number | null = null;
   showEditModal: boolean = false;
 
-  /**TO DETAIL */
-  //Descrptions simulated
-
-  // private getDishDescription(name: string): string {
-  //   const descriptions: { [key: string]: string } = {
-  //     'Tacos al Pastor': 'Tacos tradicionales con carne adobada al estilo pastor.',
-  //     'Frijoles con chicharron': 'Frijoles acompañados de crujiente chicharrón.',
-  //     'Sancocho': 'Sopa tradicional con variedad de carnes y verduras.',
-  //     'Bandeja paisa': 'Plato típico con arroz, frijoles, chicharrón y más.',
-  //     'Empanadas': 'Empanadas rellenas de carne y papa con ají casero.',
-  //     'Arroz con leche': 'Postre cremoso a base de arroz y leche con canela.',
-  //   };
-  //   return descriptions[name] || 'Descripción no disponible.';
-  // }
-  constructor(private platoService: PlatoService) {
+  constructor(private platoService: PlatoService, private tipoPlatoService: TipoPlatoService) {
     this.updatePagination();
   }
 
   ngOnInit(): void {
     this.getAllDishes();
+    this.getAllKindDishes();
+  
   }
+
+  filterDishes() {
+    return this.dishes.filter(dish => {
+      const matchesSearch = this.searchTerm === '' || dish.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesCategory = this.selectedCategory === '' || dish.tipo_plato === this.selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }
+  
+  
+  //Method to get all kind of dishes
+  getAllKindDishes(): void {
+    this.tipoPlatoService.getAllKindDishs().subscribe({
+      next: (response:MessageDTO<kindDishRead[]>) =>{
+        if(!response.error){
+          this.categories= response.respuesta;
+        }else{
+          showAlert("Ha ocurrido un error a la hora de obtener todas las categorias de los platos", 'error')
+        }
+      }
+    })
+  }
+
+
 
   //Method to get all dishes 
   getAllDishes(): void {
@@ -105,8 +120,8 @@ export class MenuComponent implements OnInit {
     this.showCategoryDialog = false;
   }
 
-  onCategorySelected(category: string): void {
-    this.selectedCategory = category;
+  onCategorySelected(categoryName: string): void {
+    this.selectedCategory = categoryName;
     this.showCategoryDialog = false;
     this.onSearch();
   }
@@ -153,23 +168,66 @@ export class MenuComponent implements OnInit {
     this.showAddDishModal = false;
   }
 
+  //Add a new dish
+
   addNewDish(): void {
-    if (!this.newDish.nombre || !this.newDish.descripcion || this.newDish.precio <= 0) {
-      alert('Todos los campos son obligatorios.');
+    // Validación mejorada con mensajes específicos
+    if (!this.newDish.nombre?.trim()) {
+      showAlert('El nombre del plato es requerido', 'error');
       return;
     }
 
-    this.platoService.savePlato(this.newDish).subscribe(response => {
-      if (!response.error) {
-        this.dishes.push({ id: Date.now(), ...this.newDish, tipo_plato: this.categories[this.newDish.id_tipo_plato - 1] });
-        this.onSearch();
-        showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
-        this.closeAddDishModal();
-      } else {
-        alert('Error al agregar el platillo.');
+    if (!this.newDish.descripcion?.trim()) {
+      showAlert('La descripción es requerida', 'error');
+      return;
+    }
+
+    if (!this.newDish.precio || this.newDish.precio <= 0) {
+      showAlert('El precio debe ser mayor a 0', 'error');
+      return;
+    }
+
+    if (this.newDish.id_tipo_plato === null) {
+      console.log('categoria seleccionada: ', this.newDish.id_tipo_plato)
+      showAlert('Debes seleccionar una categoría', 'error');
+      return;
+    }
+    
+    const platoToSend = {
+      ...this.newDish,
+      precio: Number(this.newDish.precio), // esto sí es válido y útil
+      id_tipo_plato: this.newDish.id_tipo_plato // ya es number, no hace falta convertir
+    };
+    console.log('Tipo de id_tipo_plato:', typeof this.newDish.id_tipo_plato);
+    console.log('Valor de id_tipo_plato:', this.newDish.id_tipo_plato);
+  
+    console.log('Enviando:', platoToSend); // Para depuración
+  
+    this.platoService.savePlato(platoToSend).subscribe({
+      next: (response) => {
+        if (!response.error) {
+          this.getAllDishes();
+          this.closeAddDishModal();
+          this.resetNewDishForm();
+            showAlert(`✅ Platillo agregado con ID: ${response.respuesta}`, 'success');
+        } else {
+          showAlert('Error en el servidor: ' + response.respuesta, 'error');
+        }
+      },
+      error: (err) => {
+        showAlert('Error de conexión: ' + err.message, 'error');
       }
     });
+  }
   
+  // Función para resetear el formulario
+  resetNewDishForm(): void {
+    this.newDish = {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      id_tipo_plato: 1 // Valor por defecto
+    };
   }
 
 //---------edit-------------  
