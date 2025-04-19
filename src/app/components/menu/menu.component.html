@@ -15,13 +15,14 @@
     </div>
 
   <div class="menu-grid">
-    <app-menu-card class="card-container"
-      *ngFor="let dish of filterDishes()"
-      [dish]="dish"
-      (editDish)="onEditDish(dish)"
-      (deleteDish)="onDeleteDish(dish)"
-      (viewDetail)="onViewDetail(dish)">
-    </app-menu-card>
+    <app-menu-card
+    *ngFor="let dish of filterDishes()"
+    [dish]="dish"
+    (editDish)="onEditDish($event)"
+    (deleteDish)="onDeleteDish($event)"
+    (viewDetail)="onViewDetail($event)">
+  </app-menu-card>
+  
   </div>
 
   <div class="pagination">
@@ -62,4 +63,54 @@
       </form>
     </div>
   </div>
+  <!-- Modal para editar platillo existente -->
+<div class="modal-overlay" *ngIf="showEditModal">
+  <div class="modal">
+    <h3>Editar Platillo</h3>
+    <form (ngSubmit)="onSaveEdit()">
+      <label>Nombre:</label>
+      <input
+      type="text"
+      [ngModel]="editingDish?.nombre"
+      (ngModelChange)="editingDish!.nombre = $event"
+      name="editNombre"
+      required
+      />
+
+    <textarea
+      [ngModel]="editingDish?.descripcion"
+      (ngModelChange)="editingDish!.descripcion = $event"
+      name="editDescripcion"
+      required
+    ></textarea>
+
+    <input
+      type="number"
+      [ngModel]="editingDish?.precio"
+      (ngModelChange)="editingDish!.precio = $event"
+      name="editPrecio"
+      required
+    />
+
+    <select
+      [ngModel]="editingDish?.id_tipo_plato"
+      (ngModelChange)="editingDish!.id_tipo_plato = $event"
+      name="editCategoria"
+      required
+    >
+      <option [ngValue]="null" disabled>Seleccione una categoría</option>
+      <option *ngFor="let category of categories" [ngValue]="category.idTipoPadre">
+        {{ category.nombre }}
+      </option>
+    </select>
+
+
+      <div class="modal-buttons">
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" (click)="showEditModal = false">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </div>

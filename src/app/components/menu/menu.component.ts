@@ -231,35 +231,28 @@ export class MenuComponent implements OnInit {
   }
 
 //---------edit-------------  
-  //Solo por pruebas temporales: 
-    // Simulación de mapeo de tipos de plato a IDs (debería venir del backend)
-    tipoPlatoMap: { [key: string]: number } = {
-      'Platos Fuertes': 1,
-      'Bebidas': 2,
-      'Snack': 3,
-      'Postres': 4
-    };
- 
-  onEditDish(dish: platoReadDto): void {
-    this.editingDishId = dish.id;
-    this.editingDish = { 
-      nombre: dish.nombre,
-      precio: dish.precio,
-      id_tipo_plato: this.tipoPlatoMap[dish.tipo_plato] || 0 ,
-      descripcion: dish.descripcion
-    };
-    this.showEditModal = true;
-  }
+onEditDish(dish: platoReadDto): void {
+  this.editingDishId = dish.id;
+  this.editingDish = {
+    nombre: dish.nombre,
+    precio: dish.precio,
+    id_tipo_plato: Number(dish.tipo_plato), //valor numérico correcto ya viene del backend
+    descripcion: dish.descripcion
+  };
+  this.showEditModal = true;
+}
+
 
 
   onSaveEdit(): void {
     if (this.editingDishId !== null && this.editingDish) {
+      console.log('Enviando:', this.editingDish, 'id: ',this.editingDishId ); // Para depuración
       this.platoService.editPlato(this.editingDishId, this.editingDish).subscribe({
         next: (response: MessageDTO<platoReadDto>) => {
           if (!response.error) {
             console.log('Plato actualizado correctamente:', response.respuesta);
             showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
-            
+            this.getAllDishes();
             // Actualizar la lista de platos
             const index = this.dishes.findIndex(d => d.id === response.respuesta.id);
             if (index !== -1) {
