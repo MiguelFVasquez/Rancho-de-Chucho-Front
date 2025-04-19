@@ -5,5 +5,6 @@ export interface DishDetailDto {
     descripcion:string;
     precio: number;
     tipo_plato: string;
+    activo:boolean
   }
   

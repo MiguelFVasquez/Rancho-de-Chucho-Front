@@ -5,6 +5,7 @@
       <h2>{{ selectedDish.nombre }}</h2>
       <h3> {{selectedDish.tipo_plato}}</h3>
       <p class="dish-description">{{ selectedDish.descripcion }}</p>
+      <p class="dish-description">Estado: {{ selectedDish.activo ? 'No dispoible' : 'Disponible' }}</p>
       <p class="dish-price">Precio: ${{ selectedDish.precio | number:'1.0-0' }}</p>
     </div>
   </div>

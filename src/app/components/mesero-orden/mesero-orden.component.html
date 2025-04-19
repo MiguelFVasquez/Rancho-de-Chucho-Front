@@ -26,6 +26,7 @@
 
   
 <!-- Modal para nueva orden -->
+<div class="modal-overlay" *ngIf="mostrarModal"></div>
 <div class="modal" *ngIf="mostrarModal">
     <div class="modal-content">
       <h2>Nueva Orden</h2>
@@ -34,7 +35,7 @@
       <div *ngFor="let platillo of platillosSeleccionados; let i = index" class="platillo-group">
         <select [(ngModel)]="platillo.nombre" class="select-platillo">
           <option value="" disabled selected>Seleccione un platillo</option>
-          <option *ngFor="let item of menuPlatos" [value]="item.nombre">{{ item.nombre }}</option>
+          <option *ngFor="let item of dishes" [value]="item.nombre">{{ item.nombre }}</option>
         </select>
         <input type="number" [(ngModel)]="platillo.cantidad"
         min="1" class="input-cantidad"

@@ -8,6 +8,9 @@ import { MessageDTO } from '../../dto/messageDto';
 import { NewProduct } from '../../dto/product/newProductDto';
 import { productDto } from '../../dto/product/productDto';
 import { showAlert } from '../../dto/alert';
+import { units } from '../../dto/product/units';
+import { response } from 'express';
+import { error } from 'console';
 
 @Component({
   selector: 'app-inventory',
@@ -38,7 +41,7 @@ export class InventoryComponent {
   };
 
   products: productDto[]=[];
-
+  units: units[]=[];
 
   constructor(private fb: FormBuilder, private inventoryService: InventoryService) {
     this.productForm = this.fb.group({
@@ -70,6 +73,24 @@ export class InventoryComponent {
       }
     });
   }
+
+  //Get all units 
+  getAllUnits():void{
+    this.inventoryService.getUnits().subscribe({
+      next:(response) => {
+        if(!response.error && response.respuesta){
+          this.units= response.respuesta
+        }else{
+          console.warn("La API no devolvió datos válidos.");
+          this.units = [];
+        }
+      },
+      error: (err) =>{
+        console.error("Error en la petición:", err);
+        this.units = [];
+      }
+    })
+  }
   
   //Filtro de busqueda
   get filteredProducts() {
@@ -94,6 +115,7 @@ export class InventoryComponent {
   onAddProduct() {
     this.showModal = true;
     this.productForm.reset();
+    this.getAllUnits();
   }
 
   addProduct() {
@@ -145,12 +167,14 @@ export class InventoryComponent {
     if (this.selectedProduct) {
       this.editProductData = { ...this.selectedProduct };
       this.showEditModal = true;
+      this.getAllUnits();
     }
   }
 // Esta función guarda el producto editado y actualiza la lista
   saveEditedProduct() {
     if (this.selectedProduct) {
       const id = this.selectedProduct.id;
+      this.selectedProduct.unidad_medida= this.productForm.value.unidad_medida 
       this.inventoryService.editProduct(id, this.editProductData).subscribe({
         next: (response: MessageDTO) => {
           if (response.error) {
@@ -159,6 +183,7 @@ export class InventoryComponent {
               this.products[index] = { ...this.products[index], ...this.editProductData };
             }
             this.showEditModal = false;
+            this.loadProducts();
             showAlert('✅ Producto actualizado correctamente.', 'success');
           } else {
             showAlert('❌ Error al actualizar el producto.', 'error');

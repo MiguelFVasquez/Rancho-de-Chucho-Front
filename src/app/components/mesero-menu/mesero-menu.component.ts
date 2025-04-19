@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { platoReadDto } from '../../dto/dish/dishdto';
+import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
+import { PlatoService } from '../../services/plato.service';
+import { TipoPlatoService } from '../../services/tipo-plato.service';
+import { MessageDTO } from '../../dto/messageDto';
+import { showAlert } from '../../dto/alert';
 
 @Component({
   selector: 'app-mesero-menu',
@@ -13,22 +19,60 @@ export class MeseroMenuComponent {
   searchTerm: string = '';
   selectedCategory: string = '';
 
-  categories: string[] = ['Entradas', 'Platos Fuertes', 'Postres', 'Bebidas']; //Categorias momentaneas tambien
+  categories: kindDishRead[] = [];
   
-  //Platillos (Son solo datos de prueba para visualización previa a conexión)
-  dishes = [
-    { name: 'Hamburguesa', description: 'Carne de res con queso y vegetales', price: 25.000, available: true, category: 'Platos Fuertes' },
-    { name: 'Pizza', description: 'Pizza con pepperoni y queso', price: 30.000, available: false, category: 'Platos Fuertes' },
-    { name: 'Brownie', description: 'Brownie con helado de vainilla', price: 15.000, available: true, category: 'Postres' },
-    { name: 'Jugo de Mango', description: 'Jugo natural de mango', price: 8.000, available: true, category: 'Bebidas' }
-  ];
+  //Platillos 
+  dishes: platoReadDto[] = [];
+
+  constructor(private platoService: PlatoService, private tipoPlatoService: TipoPlatoService) {
+
+  }
+  
+    ngOnInit(): void {
+      this.getAllDishes();
+      this.getAllKindDishes();
+    
+    }
+  
 
   // Filtrar platillos por categoría y búsqueda
   filteredDishes() {
     return this.dishes.filter(dish => {
-      const matchesSearch = this.searchTerm === '' || dish.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesCategory = this.selectedCategory === '' || dish.category === this.selectedCategory;
+      const matchesSearch = this.searchTerm === '' || dish.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesCategory = this.selectedCategory === '' || dish.tipo_plato === this.selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }
+
+  //Method to get all kind of dishes
+    getAllKindDishes(): void {
+      this.tipoPlatoService.getAllKindDishs().subscribe({
+        next: (response:MessageDTO<kindDishRead[]>) =>{
+          if(!response.error){
+            this.categories= response.respuesta;
+          }else{
+            showAlert("Ha ocurrido un error a la hora de obtener todas las categorias de los platos", 'error')
+          }
+        }
+      })
+    }
+  
+  
+  
+    //Method to get all dishes 
+    getAllDishes(): void {
+      this.platoService.getAllDishs().subscribe({
+        next: (response: MessageDTO<platoReadDto[]>) => {
+          if (!response.error) {
+            this.dishes = response.respuesta; 
+          } else {
+            console.error('Error obteniendo platos:', response);
+          }
+        },
+        error: (err) => {
+          console.error('Error en la petición:', err);
+        },
+      });
+    }
+
 }

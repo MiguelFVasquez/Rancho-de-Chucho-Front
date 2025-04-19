@@ -9,7 +9,7 @@
     <label for="category">Filtrar por categoría:</label>
     <select id="category" [(ngModel)]="selectedCategory">
         <option value="">Todas</option>
-        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        <option *ngFor="let category of categories" [value]="category.nombre">{{ category.nombre }}</option>
     </select>
     </div>
 
@@ -25,12 +25,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let dish of filteredDishes()">
-        <td>{{ dish.name }}</td>
-        <td>{{ dish.description }}</td>
-        <td>${{ dish.price }}</td>
+        <td>{{ dish.nombre }}</td>
+        <td>{{ dish.descripcion }}</td>
+        <td>${{ dish.precio }}</td>
         <td>
-            <span class="status" [ngClass]="{'available': dish.available, 'not-available': !dish.available}">
-            {{ dish.available ? 'Disponible' : 'No disponible' }}
+            <span class="status" [ngClass]="{'not-available': dish.activo, 'available': !dish.activo}">
+            {{ dish.activo ? 'No disponible' : 'Disponible' }}
             </span>
         </td>
         </tr>

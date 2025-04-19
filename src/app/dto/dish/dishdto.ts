@@ -5,5 +5,6 @@ export interface platoReadDto {
     descripcion: string;
     precio: number;
     tipo_plato: string;
+    activo:boolean
   }
   

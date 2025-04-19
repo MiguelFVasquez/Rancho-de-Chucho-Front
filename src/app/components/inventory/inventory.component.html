@@ -48,11 +48,11 @@
   
         <label>Unidad de medida:</label>
         <select formControlName="unidad_medida">
-          <option value="kg">kg</option>
-          <option value="g">g</option>
-          <option value="ml">ml</option>
-          <option value="l">l</option>
+          <option *ngFor="let unidad of units" [value]="unidad.notacion">
+            {{ unidad.notacion }}
+          </option>
         </select>
+        
   
         <div class="modal-buttons">
           <button type="submit" [disabled]="productForm.invalid">Guardar</button>
@@ -76,11 +76,10 @@
       <input type="number" id="editPrecio" [(ngModel)]="editProductData.precioCompra">
   
       <label for="editUnidad">Unidad de Medida:</label>
-      <select id="editUnidad" [(ngModel)]="editProductData.unidad_medida">
-        <option value="kg">kg</option>
-        <option value="g">g</option>
-        <option value="ml">ml</option>
-        <option value="l">l</option>
+      <select formControlName="unidad_medida">
+        <option *ngFor="let unidad of units" [value]="unidad.notacion">
+          {{ unidad.notacion }}
+        </option>
       </select>
   
       <!-- Botones -->

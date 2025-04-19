@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { showAlert } from '../../dto/alert';
 import { DetailOrderComponent } from '../detail-orden/detail-orden.component';
+import { platoReadDto } from '../../dto/dish/dishdto';
+import { PlatoService } from '../../services/plato.service';
+import { MessageDTO } from '../../dto/messageDto';
 @Component({
   selector: 'app-mesero-orden',
   standalone: true,
@@ -25,18 +28,35 @@ export class MeseroOrdenComponent {
   ordenesPorPagina = 4;
   ordenSeleccionada: any = null;
   errores: string[] = [];
-  //Simulación del menú.
-  menuPlatos = [
-    { nombre: "Tacos al Pastor" },
-    { nombre: "Burritos de Res" },
-    { nombre: "Enchiladas Verdes" },
-    { nombre: "Quesadillas de Queso" },
-    { nombre: "Sopes con Carne" }
-  ];
+  
+  //Platillos
+  dishes: platoReadDto[] = [];
+
+
+  constructor(private platoService: PlatoService) {
+
+  }
+
+  //Method to get all dishes 
+  getAllDishes(): void {
+    this.platoService.getAllDishs().subscribe({
+      next: (response: MessageDTO<platoReadDto[]>) => {
+        if (!response.error) {
+          this.dishes = response.respuesta; 
+        } else {
+          console.error('Error obteniendo platos:', response);
+        }
+      },
+      error: (err) => {
+        console.error('Error en la petición:', err);
+      },
+    });
+  }
 
   //Abre el dialogo para crear una nueva orden-
   abrirModal() {
     this.mostrarModal = true;
+    this.getAllDishes();
     this.platillosSeleccionados = [];
   }
 
