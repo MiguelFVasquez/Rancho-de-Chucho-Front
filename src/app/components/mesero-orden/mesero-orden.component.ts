@@ -7,6 +7,10 @@ import { DetailOrderComponent } from '../detail-orden/detail-orden.component';
 import { platoReadDto } from '../../dto/dish/dishdto';
 import { PlatoService } from '../../services/plato.service';
 import { MessageDTO } from '../../dto/messageDto';
+import { ordenReadDto } from '../../dto/order/orderReadDto';
+import { OrderService } from '../../services/order.service';
+import { Message } from '../../dto/message';
+import { PlatilloCantidadDTO, OrdenCreateDto } from '../../dto/order/createOrderDto';
 @Component({
   selector: 'app-mesero-orden',
   standalone: true,
@@ -16,12 +20,7 @@ import { MessageDTO } from '../../dto/messageDto';
 })
 export class MeseroOrdenComponent {
 
-  ordenes:any = [{ id: 1, mesa: "Mesa 1", estado: "En proceso", platillos: [{ nombre: "Tacos", cantidad: 2 }] },
-  { id: 2, mesa: "Mesa 2", estado: "Pendiente", platillos: [{ nombre: "Burritos", cantidad: 1 }] },
-  { id: 3, mesa: "Mesa 3", estado: "En proceso", platillos: [{ nombre: "Enchiladas", cantidad: 3 }] },
-  { id: 4, mesa: "Mesa 4", estado: "Pendiente", platillos: [{ nombre: "Quesadillas", cantidad: 2 }] },
-  { id: 5, mesa: "Mesa 5", estado: "En proceso", platillos: [{ nombre: "Tostadas", cantidad: 1 }] }];
-
+  ordenes:ordenReadDto[]=[]
   mostrarModal = false;
   platillosSeleccionados: { nombre: string; cantidad: number }[] = [];
   paginaActual = 0;
@@ -32,9 +31,23 @@ export class MeseroOrdenComponent {
   //Platillos
   dishes: platoReadDto[] = [];
 
+  //to new order
+  mesaSeleccionada: number | null = null;
+  mesasDisponibles: { id: string, nombre: string }[] = [
+    { id: "1", nombre: "Mesa 1" },
+    { id: "2", nombre: "Mesa 2" },
+    { id: "3", nombre: "Mesa 3" },
+    { id: "4", nombre: "Mesa 4" }
+  ]; // Puedes traerlas desde el backend si prefieres
+  errorMesa: string = "";
+  cedulaMesero = '1111'; 
 
-  constructor(private platoService: PlatoService) {
+  constructor(private platoService: PlatoService, private orderService:OrderService) {
 
+  }
+  ngOnInit(): void {
+    this.getAllOrders();
+    this.getAllDishes();
   }
 
   //Method to get all dishes 
@@ -51,6 +64,22 @@ export class MeseroOrdenComponent {
         console.error('Error en la petición:', err);
       },
     });
+  }
+
+  //Method to get all orders
+  getAllOrders():void{
+    this.orderService.getAllOrders().subscribe({
+      next: (response:Message<ordenReadDto[]>) =>{
+        if(!response.error){
+          this.ordenes = response.respuesta;
+        }else{
+          console.error('Error obteniendo las ordenes' ,response.mensaje)
+        }
+      },
+      error: (err) =>{
+        console.error('Error en la petición:', err);
+      }
+    })
   }
 
   //Abre el dialogo para crear una nueva orden-
@@ -75,31 +104,61 @@ export class MeseroOrdenComponent {
 
   //Función que crea la orden 
   confirmarOrden() {
-    // Verificar que al menos un platillo fue seleccionado
+    this.errores = [];
+    this.errorMesa = '';
+  
+    if (!this.mesaSeleccionada) {
+      this.errorMesa = 'Debe seleccionar una mesa.';
+      return;
+    }
+  
     if (this.platillosSeleccionados.length === 0) {
       alert("Debe agregar al menos un platillo.");
       return;
     }
   
-    // Verificar que todas las cantidades sean válidas
-    for (let platillo of this.platillosSeleccionados) {
-      if (!platillo.cantidad || platillo.cantidad <= 0) {
-        alert(`La cantidad de "${platillo.nombre}" debe ser mayor a 0.`);
+    const detalles: PlatilloCantidadDTO[] = [];
+  
+    for (let i = 0; i < this.platillosSeleccionados.length; i++) {
+      const platillo = this.platillosSeleccionados[i];
+      if (!platillo.nombre || !platillo.cantidad || platillo.cantidad <= 0) {
+        this.errores[i] = 'Debe ingresar un nombre y una cantidad válida';
         return;
+      } else {
+        this.errores[i] = '';
       }
+  
+      detalles.push({
+        nombre: platillo.nombre,
+        cantidad: platillo.cantidad,
+      });
     }
   
-    // Si las validaciones pasan, agregar la orden
-    const nuevaOrden = {
-      id: this.ordenes.length + 1,
-      mesa: `Mesa ${this.ordenes.length + 1}`,
-      estado: "En proceso",
-      platillos: [...this.platillosSeleccionados]
+    const nuevaOrden: OrdenCreateDto = {
+      idMesa: Number(this.mesaSeleccionada),
+      cedulaMesero: this.cedulaMesero,
+      platillos: detalles,
     };
-    this.ordenes.push(nuevaOrden);
-    showAlert(`✅ Orden creada con éxito`, 'success');
-    this.cerrarModal();
+    console.log('Orden a enviar:', nuevaOrden);
+
+  
+    this.orderService.createOrder(nuevaOrden).subscribe({
+      next: (response) => {
+        if (!response.error) {
+          alert('✅ Orden creada con éxito');
+          this.cerrarModal();
+          this.getAllOrders(); // Refrescar lista
+        } else {
+          alert('❌ Error al crear la orden: ' + response.mensaje);
+        }
+      },
+      error: (err) => {
+        console.error('Error al crear orden:', err);
+        alert('❌ Error en la comunicación con el servidor');
+      }
+    });
   }
+  
 //-------------CANCELAR UNA ORDEN-----
   cancelarOrdenDesdePadre(id: number) {
     // Se maneja el cambio de estado en base al id recibido desde el componente hijo

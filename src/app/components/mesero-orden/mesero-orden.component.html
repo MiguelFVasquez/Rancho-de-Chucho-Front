@@ -30,7 +30,16 @@
 <div class="modal" *ngIf="mostrarModal">
     <div class="modal-content">
       <h2>Nueva Orden</h2>
-  
+      <!-- Selección de mesa -->
+      <div class="mesa-group">
+        <label for="mesaSelect">Seleccione una mesa:</label>
+        <select [(ngModel)]="mesaSeleccionada" [ngModelOptions]="{standalone: true}" id="mesa-select" class="select-mesa">
+          <option value="" disabled selected>Seleccione una mesa</option>
+          <option *ngFor="let mesa of mesasDisponibles" [ngValue]="mesa.id">{{ mesa.nombre }}</option>
+        </select>
+        <p *ngIf="errorMesa" class="error-msg">{{ errorMesa }}</p>
+      </div>
+
       <!-- Selección de platillos -->
       <div *ngFor="let platillo of platillosSeleccionados; let i = index" class="platillo-group">
         <select [(ngModel)]="platillo.nombre" class="select-platillo">

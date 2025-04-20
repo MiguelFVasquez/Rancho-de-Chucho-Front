@@ -1,7 +1,7 @@
 <div class="orden-card">
-    <h3>{{ orden.mesa }}</h3>
-    <p>ID Orden: {{ orden.id }}</p>
-    <p>Estado: <span [ngClass]="orden.estado | lowercase">{{ orden.estado }}</span></p>
-    <button class="detalles-btn" (click)="abrirDetalles()">Ver Detalles</button>
-  </div>
-  
+  <h3>Mesa #{{ orden.idMesa }}</h3>
+  <p>ID Orden: {{ orden.idOrden }}</p>
+  <p *ngIf="orden.fechaCierre; else enProceso">Estado: <span class="cerrada">Cerrada</span></p>
+  <ng-template #enProceso><p>Estado: <span class="abierta">Abierta</span></p></ng-template>
+  <button class="detalles-btn" (click)="abrirDetalles()">Ver Detalles</button>
+</div>
