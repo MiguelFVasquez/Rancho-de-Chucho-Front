@@ -1,38 +1,34 @@
-<div class="profile-container">
-    <h2>Mi Perfil</h2>
-    <div class="profile-form">
-      <div class="form-group">
-        <label for="name">Nombre</label>
-        <input id="name" type="text" [value]="'Juan Esteban'" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="id">Cédula</label>
-        <input id="id" type="text" [value]="'1010101010'" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="username">Usuario</label>
-        <input id="username" type="text" [value]="'admin@gmail.com'" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <div class="password-container">
-          <input
-            id="password"
-            [type]="showPassword ? 'text' : 'password'"
-            [value]="'admin1234'"
-            disabled
-          />
-          <span class="toggle-password" (click)="togglePasswordVisibility()">
-            {{ showPassword ? '🤫':'👁️'  }}
-          </span>
-        </div>
+<div class="profile-container" *ngIf="user">
+  <h2>Mi Perfil</h2>
+  <div class="profile-form">
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input id="name" type="text" [value]="user.nombre" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="id">Cédula</label>
+      <input id="id" type="text" [value]="user.cedula" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="username">Usuario</label>
+      <input id="username" type="text" [value]="user.username" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <div class="password-container">
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          [value]="'••••••••'" disabled />
+        <span class="toggle-password" (click)="togglePasswordVisibility()">
+          {{ showPassword ? '🤫' : '👁️' }}
+        </span>
       </div>
     </div>
-  
-    <!-- Botón de Cerrar Sesión -->
-    <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
   </div>
-  
+
+  <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+</div>

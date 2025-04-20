@@ -48,6 +48,16 @@ export class MeseroOrdenComponent {
   ngOnInit(): void {
     this.getAllOrders();
     this.getAllDishes();
+    this.obtenerCedulaMesero();
+    this.getAllOrders();
+    this.getAllDishes();
+  }
+  obtenerCedulaMesero(): void {
+    const userSession = localStorage.getItem('userSession');
+    if (userSession) {
+      const usuario = JSON.parse(userSession);
+      this.cedulaMesero = usuario.cedula; // Asegúrate que la propiedad se llame así
+    }
   }
 
   //Method to get all dishes 
