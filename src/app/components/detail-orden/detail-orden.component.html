@@ -6,15 +6,14 @@
 
     <p><strong>Fecha de cierre:</strong> 
       <span *ngIf="orden.fechaCierre; else enProceso">{{ orden.fechaCierre | date:'short' }}</span>
-      <ng-template #enProceso> En proceso</ng-template>
+      <ng-template #enProceso>No finalizada</ng-template>
     </p>
 
     <p><strong>Mesa:</strong> {{ orden.idMesa }}</p>
     <p><strong>Mesero:</strong> {{ orden.cedulaMesero }}</p>
+
     <p><strong>Estado:</strong> 
-      <span [ngClass]="orden.fechaCierre ? 'cerrada' : 'abierta'">
-        {{ orden.fechaCierre ? 'Cerrada' : 'Abierta' }}
-      </span>
+      <span [ngClass]="orden.estadoOrden.toLowerCase()">{{ orden.estadoOrden }}</span>
     </p>
 
     <h3>Platillos:</h3>
@@ -35,8 +34,8 @@
     <div class="botones-detalle">
       <button class="btn-editar" (click)="cerrarDetalle.emit()">Editar</button>
       <button class="btn-cerrar" (click)="cerrarDetalle.emit()">Cerrar</button>
-      
-      <button *ngIf="!orden.fechaCierre"
+
+      <button *ngIf="orden.estadoOrden === 'ESPERA' || orden.estadoOrden === 'PROCESO'"
               class="btn-cancelar"
               (click)="ordenCancelada.emit(orden.idOrden)">
         Cancelar Orden

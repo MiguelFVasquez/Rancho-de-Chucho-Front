@@ -24,6 +24,10 @@ export class OrderService {
     return this.http.post<Message<OrdenCreateDto>>(`${this.apiURL}/save`, newOrder);
   }
   
+  // Método para cancelar una orden
+  cancelarOrden(idOrden: number): Observable<Message> {
+    return this.http.put<Message>(`${this.apiURL}/cancelar/${idOrden}`, {});
+  }
 
 
 

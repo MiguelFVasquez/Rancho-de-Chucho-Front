@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input,Output } from '@angular/core';
+import { ordenReadDto } from '../../dto/order/orderReadDto';
 
 @Component({
   selector: 'app-orden-card',
@@ -9,7 +10,7 @@ import { Component, EventEmitter, Input,Output } from '@angular/core';
   styleUrl: './orden-card.component.css'
 })
 export class OrdenCardComponent {
-  @Input() orden: any;
+  @Input() orden!: ordenReadDto;
   @Output() verDetalles = new EventEmitter<any>();
   
   abrirDetalles() {

@@ -8,6 +8,7 @@ export interface ordenReadDto {
     impuestos: number;
     idMesa: number;
     cedulaMesero: string;
+    estadoOrden: 'ESPERA' | 'PROCESO' | 'FINALIZADA' | 'CANCELADA';
     platos: PlatilloOrdenadoDto[];
 }
   

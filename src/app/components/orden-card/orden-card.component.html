@@ -1,7 +1,17 @@
 <div class="orden-card">
   <h3>Mesa #{{ orden.idMesa }}</h3>
   <p>ID Orden: {{ orden.idOrden }}</p>
-  <p *ngIf="orden.fechaCierre; else enProceso">Estado: <span class="cerrada">Cerrada</span></p>
-  <ng-template #enProceso><p>Estado: <span class="abierta">Abierta</span></p></ng-template>
+  
+  <p>Estado: 
+    <span [ngClass]="{
+      'espera': orden.estadoOrden === 'ESPERA',
+      'proceso': orden.estadoOrden === 'PROCESO',
+      'finalizada': orden.estadoOrden === 'FINALIZADA',
+      'cancelada': orden.estadoOrden === 'CANCELADA'
+    }">
+      {{ orden.estadoOrden }}
+    </span>
+  </p>
+
   <button class="detalles-btn" (click)="abrirDetalles()">Ver Detalles</button>
 </div>

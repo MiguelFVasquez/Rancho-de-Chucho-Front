@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { platoReadDto } from '../../dto/dish/dishdto';
 import { PlatoService } from '../../services/plato.service';
+import { OrderService } from '../../services/order.service'; 
 import { MessageDTO } from '../../dto/messageDto';
 import { FormsModule } from '@angular/forms';
 import { ordenReadDto } from '../../dto/order/orderReadDto';
@@ -26,7 +27,7 @@ export class DetailOrderComponent {
   platillosSeleccionados: { nombre: string; cantidad: number }[] = [];
   errores: string[] = [];
 
-  constructor(private platoService: PlatoService) {}
+  constructor(private platoService: PlatoService,  private orderService: OrderService) {}
 
   // Obtener todos los platos disponibles
   getAllDishes(): void {
@@ -91,9 +92,27 @@ export class DetailOrderComponent {
     const confirmacion = window.confirm('¿Seguro que desea cancelar la orden?');
   
     if (confirmacion) {
-      this.ordenCancelada.emit(this.orden.idOrden);
+      this.orderService.cancelarOrden(this.orden.idOrden).subscribe({
+        next: (response) => {
+          if (!response.error) {
+            alert('Orden cancelada exitosamente.');
+            this.orden.estadoOrden = 'CANCELADA'; // Refleja el cambio en el front
+            this.cerrar(); // Opcional: cerrar modal automáticamente
+          } else {
+            alert(`No se pudo cancelar: ${response.mensaje}`);
+          }
+        },
+        error: (error) => {
+          console.error('Error al cancelar la orden:', error);
+          alert('Ocurrió un error al intentar cancelar la orden.');
+        }
+      });
     }
   }
+  
+
+
+
   //Agrega el platillo a la orden
   agregarPlatillo() {
     this.platillosSeleccionados.push({ nombre: "", cantidad: 1 });
