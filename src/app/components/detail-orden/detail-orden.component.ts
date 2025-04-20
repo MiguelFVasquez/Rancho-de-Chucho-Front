@@ -89,9 +89,10 @@ export class DetailOrderComponent {
 
   // -----Evento para cancelar la orden, se emite el evento para el componente padre
   cancelarOrden() {
+ 
     const confirmacion = window.confirm('¿Seguro que desea cancelar la orden?');
-  
     if (confirmacion) {
+      this.ordenCancelada.emit(this.orden.idOrden);
       this.orderService.cancelarOrden(this.orden.idOrden).subscribe({
         next: (response) => {
           if (!response.error) {
@@ -108,8 +109,8 @@ export class DetailOrderComponent {
         }
       });
     }
+ 
   }
-  
 
 
 

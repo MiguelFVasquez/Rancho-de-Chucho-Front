@@ -32,14 +32,14 @@
     <p><strong>Impuestos:</strong> {{ orden.impuestos | currency }}</p>
 
     <div class="botones-detalle">
-      <button class="btn-editar" (click)="cerrarDetalle.emit()">Editar</button>
       <button class="btn-cerrar" (click)="cerrarDetalle.emit()">Cerrar</button>
 
       <button *ngIf="orden.estadoOrden === 'ESPERA' || orden.estadoOrden === 'PROCESO'"
-              class="btn-cancelar"
-              (click)="ordenCancelada.emit(orden.idOrden)">
+        class="btn-cancelar"
+        (click)="cancelarOrden()">
         Cancelar Orden
       </button>
+
     </div>
   </div>
 </div>
