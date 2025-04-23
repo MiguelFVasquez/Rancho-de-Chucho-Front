@@ -1,34 +1,35 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Message } from '../dto/message';
-import { MessageDTO } from '../dto/messageDto';
-import { ordenReadDto } from '../dto/order/orderReadDto';
-import { OrdenCreateDto } from '../dto/order/createOrderDto';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Message } from "../dto/message";
+import { MessageDTO } from "../dto/messageDto";
+import { ordenReadDto } from "../dto/order/orderReadDto";
+import { OrdenCreateDto } from "../dto/order/createOrderDto";
+import { environment } from "../env/env";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class OrderService {
-  private apiURL = 'http://localhost:8086/api/orden';  
+  private apiURL = environment.ApiUrl + "/api/orden";
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  //Method to get all orders 
-  getAllOrders():Observable<Message<ordenReadDto[]>>{
+  //Method to get all orders
+  getAllOrders(): Observable<Message<ordenReadDto[]>> {
     return this.http.get<Message<ordenReadDto[]>>(`${this.apiURL}/getAll`);
   }
 
   //Method to create a new order
   createOrder(newOrder: OrdenCreateDto): Observable<Message> {
-    return this.http.post<Message<OrdenCreateDto>>(`${this.apiURL}/save`, newOrder);
+    return this.http.post<Message<OrdenCreateDto>>(
+      `${this.apiURL}/save`,
+      newOrder,
+    );
   }
-  
+
   // Método para cancelar una orden
   cancelarOrden(idOrden: number): Observable<Message> {
     return this.http.put<Message>(`${this.apiURL}/cancelar/${idOrden}`, {});
   }
-
-
-
 }
