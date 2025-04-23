@@ -23,8 +23,10 @@ export class ProfileComponent implements OnInit {
       this.user = JSON.parse(userData);
     } else {
       // Si no hay sesión, redirige al login
-      this.router.navigate(['/login']);
+      this.router.navigate(['/administrator']);
     }
+    
+
   }
 
   togglePasswordVisibility() {
@@ -33,6 +35,6 @@ export class ProfileComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('userSession');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/logini']);
   }
 }

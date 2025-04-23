@@ -41,7 +41,7 @@ export class LoginComponent {
   
       // ADMIN HARDCODEADO
       if (username === 'admin@gmail.com' && password === 'admin1234') {
-        this.router.navigate(['/administrator']);
+        this.router.navigate(['/administrator/inventory']);
         return;
       }
   
