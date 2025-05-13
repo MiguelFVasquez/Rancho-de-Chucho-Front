@@ -9,9 +9,10 @@ import { PlatoService } from '../../services/plato.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
 import { showAlert } from '../../dto/alert';
-import { platoCreate } from '../../dto/dish/PlatoCreateDto';
+import { PlatoCreate } from '../../dto/dish/PlatoCreateDto';
 import { TipoPlatoService } from '../../services/tipo-plato.service';
 import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
+import { productDto } from '../../dto/product/productDto';
 
 @Component({
   selector: 'app-menu',
@@ -21,12 +22,12 @@ import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnInit {
-  
+
   dishes: platoReadDto[] = [];
   filteredDishes: platoReadDto[] = [];
   paginatedDishes: platoReadDto[] = [];
   categories: kindDishRead[] = [];
-
+  productos: productDto[] = [];
 
   selectedCategory: string = '';
   searchTerm: string = '';
@@ -38,13 +39,18 @@ export class MenuComponent implements OnInit {
   //State to add
   showAddDishModal: boolean = false;
 
-  newDish: platoCreate = {
+  newDish: PlatoCreate = {
     nombre: '',
     descripcion: '',
     precio: 0,
-    id_tipo_plato: null
+    id_tipo_plato: null,
+    listaIngredientes: []
   };
-  
+  ingredienteTemp = {
+    idIngrediente: null,
+    notacionUnidadMedida: '',
+    cantidad: null
+  };
 
 
   //State to edit
@@ -59,7 +65,7 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.getAllDishes();
     this.getAllKindDishes();
-  
+
   }
 
   filterDishes() {
@@ -69,8 +75,8 @@ export class MenuComponent implements OnInit {
       return matchesSearch && matchesCategory;
     });
   }
-  
-  
+
+
   //Method to get all kind of dishes
   getAllKindDishes(): void {
     this.tipoPlatoService.getAllKindDishs().subscribe({
@@ -86,12 +92,12 @@ export class MenuComponent implements OnInit {
 
 
 
-  //Method to get all dishes 
+  //Method to get all dishes
   getAllDishes(): void {
     this.platoService.getAllDishs().subscribe({
       next: (response: MessageDTO<platoReadDto[]>) => {
         if (!response.error) {
-          this.dishes = response.respuesta; 
+          this.dishes = response.respuesta;
           this.onSearch();
         } else {
           console.error('Error obteniendo platos:', response);
@@ -192,7 +198,7 @@ export class MenuComponent implements OnInit {
       showAlert('Debes seleccionar una categoría', 'error');
       return;
     }
-    
+
     const platoToSend = {
       ...this.newDish,
       precio: Number(this.newDish.precio), // esto sí es válido y útil
@@ -200,9 +206,9 @@ export class MenuComponent implements OnInit {
     };
     console.log('Tipo de id_tipo_plato:', typeof this.newDish.id_tipo_plato);
     console.log('Valor de id_tipo_plato:', this.newDish.id_tipo_plato);
-  
+
     console.log('Enviando:', platoToSend); // Para depuración
-  
+
     this.platoService.savePlato(platoToSend).subscribe({
       next: (response) => {
         if (!response.error) {
@@ -219,6 +225,32 @@ export class MenuComponent implements OnInit {
       }
     });
   }
+  agregarIngrediente(): void {
+    const { idIngrediente, notacionUnidadMedida, cantidad } = this.ingredienteTemp;
+  
+    if (idIngrediente && notacionUnidadMedida.trim() && !isNaN(Number(cantidad)) && Number(cantidad) > 0) {
+      this.newDish.listaIngredientes.push({
+        idIngrediente,
+        notacionUnidadMedida: notacionUnidadMedida.trim(),
+        cantidad: Number(cantidad)
+      });
+    
+      // Reset temporal
+      this.ingredienteTemp = {
+        idIngrediente: null,
+        notacionUnidadMedida: '',
+        cantidad: null
+      };
+    } else {
+      showAlert('Todos los campos del ingrediente son obligatorios y la cantidad debe ser mayor a 0', 'error');
+    }
+    
+    
+  }
+  
+  eliminarIngrediente(index: number): void {
+    this.newDish.listaIngredientes.splice(index, 1);
+  }
   
   // Función para resetear el formulario
   resetNewDishForm(): void {
@@ -226,11 +258,12 @@ export class MenuComponent implements OnInit {
       nombre: '',
       descripcion: '',
       precio: 0,
-      id_tipo_plato: 1 // Valor por defecto
+      id_tipo_plato: 1,
+      listaIngredientes: []
     };
   }
 
-//---------edit-------------  
+//---------edit-------------
 onEditDish(dish: platoReadDto): void {
   this.editingDishId = dish.id;
   this.editingDish = {

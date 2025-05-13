@@ -27,7 +27,9 @@ export class MeseroOrdenComponent {
   ordenesPorPagina = 4;
   ordenSeleccionada: any = null;
   errores: string[] = [];
-  
+
+  //status order
+  ordenesPorEstado: { [estado: string]: any[] } = {};
   //Platillos
   dishes: platoReadDto[] = [];
 
@@ -40,7 +42,7 @@ export class MeseroOrdenComponent {
     { id: "4", nombre: "Mesa 4" }
   ]; // Puedes traerlas desde el backend si prefieres
   errorMesa: string = "";
-  cedulaMesero = '1111'; 
+  cedulaMesero = '1111';
 
   constructor(private platoService: PlatoService, private orderService:OrderService) {
 
@@ -60,12 +62,30 @@ export class MeseroOrdenComponent {
     }
   }
 
-  //Method to get all dishes 
+  agruparOrdenesPorEstado() {
+    this.ordenesPorEstado = this.ordenes.reduce((resultado, orden) => {
+      const estado = orden.estadoOrden || 'SIN_ESTADO';
+      if (!resultado[estado]) {
+        resultado[estado] = [];
+      }
+      resultado[estado].push(orden);
+      return resultado;
+    }, {} as { [estado: string]: any[] });
+  }
+
+  //Method to get all state orden
+  getEstadosOrdenados(): string[] {
+    return Object.keys(this.ordenesPorEstado).sort();
+  }
+
+
+
+  //Method to get all dishes
   getAllDishes(): void {
     this.platoService.getAllDishs().subscribe({
       next: (response: MessageDTO<platoReadDto[]>) => {
         if (!response.error) {
-          this.dishes = response.respuesta; 
+          this.dishes = response.respuesta;
         } else {
           console.error('Error obteniendo platos:', response);
         }
@@ -102,7 +122,7 @@ export class MeseroOrdenComponent {
   cerrarModal() {
     this.mostrarModal = false;
   }
-  //Agrega los campos para seleccionar un platillo, al igual que la cantidad. 
+  //Agrega los campos para seleccionar un platillo, al igual que la cantidad.
   agregarPlatillo() {
     this.platillosSeleccionados.push({ nombre: "", cantidad: 1 });
   }
@@ -112,23 +132,23 @@ export class MeseroOrdenComponent {
   }
 
 
-  //Función que crea la orden 
+  //Función que crea la orden
   confirmarOrden() {
     this.errores = [];
     this.errorMesa = '';
-  
+
     if (!this.mesaSeleccionada) {
       this.errorMesa = 'Debe seleccionar una mesa.';
       return;
     }
-  
+
     if (this.platillosSeleccionados.length === 0) {
       alert("Debe agregar al menos un platillo.");
       return;
     }
-  
+
     const detalles: PlatilloCantidadDTO[] = [];
-  
+
     for (let i = 0; i < this.platillosSeleccionados.length; i++) {
       const platillo = this.platillosSeleccionados[i];
       if (!platillo.nombre || !platillo.cantidad || platillo.cantidad <= 0) {
@@ -137,13 +157,13 @@ export class MeseroOrdenComponent {
       } else {
         this.errores[i] = '';
       }
-  
+
       detalles.push({
         nombre: platillo.nombre,
         cantidad: platillo.cantidad,
       });
     }
-  
+
     const nuevaOrden: OrdenCreateDto = {
       idMesa: Number(this.mesaSeleccionada),
       cedulaMesero: this.cedulaMesero,
@@ -151,7 +171,7 @@ export class MeseroOrdenComponent {
     };
     console.log('Orden a enviar:', nuevaOrden);
 
-  
+
     this.orderService.createOrder(nuevaOrden).subscribe({
       next: (response) => {
         if (!response.error) {
@@ -168,7 +188,7 @@ export class MeseroOrdenComponent {
       }
     });
   }
-  
+
 //-------------CANCELAR UNA ORDEN-----
   cancelarOrdenDesdePadre(id: number) {
     // Se maneja el cambio de estado en base al id recibido desde el componente hijo
@@ -176,11 +196,11 @@ export class MeseroOrdenComponent {
     this.ordenSeleccionada = null; // Cerrar el modal si quieres
   }
 
-  
+
 //-----------Función para validar que los valores ingresados en la cantidad sean datos validos.-----
   validarCantidad(index: number) {
     let cantidad = this.platillosSeleccionados[index].cantidad;
-  
+
     // Si la cantidad es menor que 1 o no es un número, establecer 1 por defecto
     if (!cantidad || isNaN(cantidad) || cantidad < 1) {
       this.platillosSeleccionados[index].cantidad = 1;
@@ -188,7 +208,7 @@ export class MeseroOrdenComponent {
   }
   validarTecla(event: KeyboardEvent) {
     const teclaPresionada = event.key;
-  
+
     // Permitir solo números del 0 al 9
     if (!/^\d$/.test(teclaPresionada)) {
       event.preventDefault();
@@ -199,9 +219,9 @@ export class MeseroOrdenComponent {
   abrirDetalleOrden(orden: any) {
     this.ordenSeleccionada = orden;
   }
-  
+
 //-----------PAGINACIÓN DE LAS ORDENES-----------
-  
+
   get ordenesPaginadas() {
     const inicio = this.paginaActual * this.ordenesPorPagina;
     return this.ordenes.slice(inicio, inicio + this.ordenesPorPagina);

@@ -4,9 +4,18 @@
   
     <!-- Contenedor de órdenes en fila -->
     <div class="ordenes-list">
-      <div *ngFor="let orden of ordenesPaginadas" class="orden-card-container">
-        <app-orden-card [orden]="orden" (verDetalles)="abrirDetalleOrden($event)"></app-orden-card>      </div>
-    </div>
+      <div *ngFor="let estado of getEstadosOrdenados()">
+        <h3 class="estado-titulo">{{ estado }}</h3>
+        <div class="ordenes-por-estado">
+          <div *ngFor="let orden of ordenesPorEstado[estado]" class="orden-card-container">
+            <app-orden-card 
+              [orden]="orden" 
+              (verDetalles)="abrirDetalleOrden($event)">
+            </app-orden-card>
+          </div>
+        </div>
+      </div>
+    </div>    
   
     <!-- Paginador -->
     <div class="paginador">

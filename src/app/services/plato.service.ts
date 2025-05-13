@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { platoCreate } from "../dto/dish/PlatoCreateDto";
+import { PlatoCreate } from "../dto/dish/PlatoCreateDto";
 import { MessageDTO } from "../dto/messageDto";
 import { Observable } from "rxjs";
 import { PlatoUpdate } from "../dto/dish/PlatoUpdateDto";
@@ -21,7 +21,7 @@ export class PlatoService {
   }
 
   //Add a new dish
-  savePlato(newPlato: platoCreate): Observable<MessageDTO> {
+  savePlato(newPlato: PlatoCreate): Observable<MessageDTO> {
     return this.http.post<MessageDTO>(`${this.apiURL}/save`, newPlato);
   }
   //Method to edit a dish

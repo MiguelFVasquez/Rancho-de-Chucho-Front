@@ -166,8 +166,6 @@
 .add-dish-btn:hover {
   background-color: #075e6a;
 }
-
-
 /* Fondo oscuro translúcido */
 .modal-overlay {
   position: fixed;
@@ -179,6 +177,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999; /* Asegúrate de que el modal esté por encima de otros elementos */
+  padding: 10px; /* Añadido para evitar que el modal se quede pegado a los bordes de la pantalla en pantallas pequeñas */
 }
 
 /* Contenedor del modal */
@@ -186,10 +186,14 @@
   background: white;
   padding: 25px;
   border-radius: 12px;
-  width: 350px;
+  width: 100%; /* Ajustamos al 100% para que ocupe toda la pantalla, pero se controla con max-width */
+  max-width: 600px; /* Ancho máximo para evitar que sea muy grande en pantallas grandes */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Permite el desplazamiento si el contenido es demasiado largo */
+  max-height: 90vh; /* Evita que el modal sea más alto que el 90% de la ventana */
 }
 
 /* Espaciado entre elementos */
@@ -207,7 +211,7 @@
 .modal textarea,
 .modal select {
   width: 100%;
-  padding: 8px;
+  padding: 10px; /* Aumenté el padding para mejorar la usabilidad */
   border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 12px;
@@ -226,29 +230,31 @@
 /* Botones alineados con espacio */
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap; /* Esto permitirá que los botones se apilen en pantallas pequeñas */
   gap: 10px;
   margin-top: 10px;
+  justify-content: space-between;
 }
 
 /* Estilos para botones */
 .modal-buttons button {
-  flex: 1;
-  padding: 8px;
+  flex: 1 1 48%; /* Los botones ocupan el 48% del espacio para permitir el ajuste */
+  padding: 10px;
   border: none;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Botón Guardar */
 .modal-buttons button[type="submit"] {
-  background-color:  #097887;
+  background-color: #097887;
   color: white;
 }
 
 .modal-buttons button[type="submit"]:hover {
-  background-color:  #035863;
+  background-color: #035863;
 }
 
 /* Botón Cancelar */
@@ -259,6 +265,18 @@
 
 .modal-buttons button[type="button"]:hover {
   background-color: #c82333;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 600px) {
+  .modal {
+    width: 100%;
+    padding: 15px; /* Menos padding para aprovechar mejor el espacio */
+  }
+
+  .modal-buttons button {
+    flex: 1 1 100%; /* Los botones ocupan el 100% en pantallas pequeñas */
+  }
 }
 
 

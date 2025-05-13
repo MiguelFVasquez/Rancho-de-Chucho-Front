@@ -54,7 +54,34 @@
             {{ category.nombre }}
           </option>
         </select>
+        <!-- Ingredientes dinámicos -->
+<h4>Ingredientes</h4>
 
+<div class="ingrediente-form">
+  <label>Ingrediente:</label>
+  <select [(ngModel)]="ingredienteTemp.idIngrediente" name="idIngredienteTemp" required>
+    <option [ngValue]="null" disabled>Seleccione un ingrediente</option>
+    <option *ngFor="let producto of productos" [ngValue]="producto.id">
+      {{ producto.nombre }}
+    </option>
+  </select>
+
+  <label>Unidad de Medida:</label>
+  <input type="text" [(ngModel)]="ingredienteTemp.notacionUnidadMedida" name="unidadTemp" placeholder="kg, ml, etc." required />
+
+  <label>Cantidad:</label>
+  <input type="number" [(ngModel)]="ingredienteTemp.cantidad" name="cantidadTemp" required />
+
+  <button type="button" (click)="agregarIngrediente()">Agregar Ingrediente</button>
+</div>
+
+    <!-- Lista de ingredientes agregados -->
+    <ul class="ingredientes-lista">
+      <li *ngFor="let ingrediente of newDish.listaIngredientes; let i = index">
+        ID: {{ ingrediente.idIngrediente }} | Unidad: {{ ingrediente.notacionUnidadMedida }} | Cantidad: {{ ingrediente.cantidad }}
+        <button type="button" (click)="eliminarIngrediente(i)">❌</button>
+      </li>
+    </ul>
         
         <div class="modal-buttons">
           <button type="submit">Guardar</button>

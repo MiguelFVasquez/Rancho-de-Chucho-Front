@@ -18,19 +18,19 @@ export class MenuCardComponent {
   @Output() deleteDish = new EventEmitter<platoReadDto>();
   @Output() viewDetail = new EventEmitter<platoReadDto>();
 
-  
+
   onEdit(event: MouseEvent) {
     event.stopPropagation();
     this.editDish.emit(this.dish); // se emite el dish
   }
-  
+
   onDelete(event: MouseEvent) {
     event.stopPropagation();
     this.deleteDish.emit(this.dish);
   }
-  
+
   onCardClick() {
     this.viewDetail.emit(this.dish);
   }
-  
+
 }
