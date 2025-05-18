@@ -147,7 +147,7 @@
         font-size: 1rem;
         margin-top: 5px;
         background-color: white;
-        appearance: none; /* Elimina los estilos por defecto en algunos navegadores */
+        appearance: none; 
     }
     
     /*  Botones del modal */
@@ -179,12 +179,12 @@
 
     /*  Botón "Cancelar" con estilo gris */
     .modal-buttons button[type="button"] {
-        background-color: #ccc;
-        color: #333;
+        background-color: #8d8c8c;
+        color: white;
     }
 
     .modal-buttons button[type="button"]:hover {
-        background-color: #bbb;
+        background-color: rgb(41, 40, 40);
     }
     .add-stock-btn {
         background-color: #097887;

@@ -1,305 +1,229 @@
-.menu-container {
-  padding: 4px;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ffffff;
-  font-size: 1rem;
-  margin-bottom: 16px;
-}
-
-.category-filter {
-  margin-bottom: 1rem;
-}
-
-.category-filter label {
-  font-weight: bold;
-  color: #333;
-  margin-right: 5px;
-}
-
-.category-filter select {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #eee;
-}
-
-.category-btn:hover {
-  background-color: #075e6a;
-}
-
-.category-dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+.menu-controls {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
-  z-index: 20;
-  padding: 16px;
-}
-
-.dialog-content {
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  align-items: center;
-}
-
-.dialog-content h3 {
-  margin-bottom: 8px;
-  font-size: 1.2rem;
-}
-
-.dialog-content button {
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #097887;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
-  max-width: 140px;
-}
-
-.dialog-content button:hover {
-  background-color: #075e6a;
-}
-
-.category-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 12px;
-  padding: 10px;
-  width: 100%;
-  text-align: center;
-  transition: transform 0.2s ease-in-out;
-}
-
-.category-item:hover {
-  transform: scale(1.05);
-  background-color: #e0e0e0;
-}
-
-.close-dialog {
-  align-self: flex-end;
-  background-color: #d9534f;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.close-dialog:hover {
-  background-color: #c9302c;
-}
-
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 32px;
-  padding: 4px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.pagination button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #097887;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #075e6a;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
 .add-dish-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 10px 0;
+  gap: 0.5rem;
   background-color: #097887;
   color: white;
-  padding: 10px 15px;
   border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .add-dish-btn:hover {
-  background-color: #075e6a;
+  background-color: #097889;
 }
-/* Fondo oscuro translúcido */
+
+.search-bar {
+  flex: 1 1 250px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Tabla de platillos */
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.menu-table th,
+.menu-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.menu-table tr:hover {
+  background-color: #cae7f3;
+  cursor: pointer;
+}
+
+.menu-table .selected {
+  background-color: #b3ddf0;
+  font-weight: bold;
+}
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.4);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999; /* Asegúrate de que el modal esté por encima de otros elementos */
-  padding: 10px; /* Añadido para evitar que el modal se quede pegado a los bordes de la pantalla en pantallas pequeñas */
+  justify-content: center;
+  z-index: 1000;
 }
 
-/* Contenedor del modal */
 .modal {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 100%; /* Ajustamos al 100% para que ocupe toda la pantalla, pero se controla con max-width */
-  max-width: 600px; /* Ancho máximo para evitar que sea muy grande en pantallas grandes */
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  overflow-y: auto; /* Permite el desplazamiento si el contenido es demasiado largo */
-  max-height: 90vh; /* Evita que el modal sea más alto que el 90% de la ventana */
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Espaciado entre elementos */
 .modal h3 {
-  text-align: center;
-  margin-bottom: 15px;
+  margin-top: 0;
 }
 
 .modal label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
 .modal input,
 .modal textarea,
 .modal select {
   width: 100%;
-  padding: 10px; /* Aumenté el padding para mejorar la usabilidad */
-  border: 1px solid #ccc;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
   border-radius: 6px;
-  margin-bottom: 12px;
-  font-size: 14px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-/* Efectos al enfocar los inputs */
-.modal input:focus,
-.modal textarea:focus,
-.modal select:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Botones alineados con espacio */
 .modal-buttons {
+  margin-top: 1.5rem;
   display: flex;
-  flex-wrap: wrap; /* Esto permitirá que los botones se apilen en pantallas pequeñas */
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
-/* Estilos para botones */
 .modal-buttons button {
-  flex: 1 1 48%; /* Los botones ocupan el 48% del espacio para permitir el ajuste */
-  padding: 10px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modal-buttons button:first-child {
+  background-color: #2196F3;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Ingredientes */
+.ingrediente-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.ingrediente-fields select,
+.ingrediente-fields input {
+  flex: 1;
+  min-width: 100px;
+}
+
+.ingrediente-lista {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+}
+
+.ingrediente-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-small {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-/* Botón Guardar */
-.modal-buttons button[type="submit"] {
-  background-color: #097887;
+.btn-small.blue {
+  background-color: #2196F3;
   color: white;
 }
 
-.modal-buttons button[type="submit"]:hover {
-  background-color: #035863;
-}
-
-/* Botón Cancelar */
-.modal-buttons button[type="button"] {
-  background-color: #dc3545;
+.btn-small.red {
+  background-color: #f44336;
   color: white;
 }
 
-.modal-buttons button[type="button"]:hover {
-  background-color: #c82333;
+/* Botones inferiores */
+.menu-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* Ajustes para pantallas pequeñas */
+.menu-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #029bb6;
+  color: #fff;
+}
+
+.edit-btn:disabled,
+.delete-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
+  .menu-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ingrediente-fields {
+    flex-direction: column;
+  }
+
   .modal {
-    width: 100%;
-    padding: 15px; /* Menos padding para aprovechar mejor el espacio */
-  }
-
-  .modal-buttons button {
-    flex: 1 1 100%; /* Los botones ocupan el 100% en pantallas pequeñas */
-  }
-}
-
-
-
-
-@media (max-width: 768px) {
-  .search-bar,
-  .category-btn {
-    width: 100%;
-    font-size: 0.9rem;
-  }
-
-  .dialog-content {
-    width: 90%;
-  }
-
-  .category-item {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-
-  .menu-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    padding: 1rem;
   }
 }

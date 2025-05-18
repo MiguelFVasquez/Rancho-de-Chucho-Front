@@ -1,3 +1,5 @@
+import { IngredientePlatoDto } from "./PlatoCreateDto";
+
 // Interface to represent 'platoReadDto' from backend
 export interface platoReadDto {
     id: number;
@@ -5,6 +7,7 @@ export interface platoReadDto {
     descripcion: string;
     precio: number;
     tipo_plato: string;
-    activo:boolean
-  }
+    activo:boolean;
+    listaIngredientes: IngredientePlatoDto[];
+}
   

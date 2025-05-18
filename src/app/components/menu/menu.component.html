@@ -1,143 +1,183 @@
-<div class="menu-container">
-  
-  <h2>Menú</h2>
-    <!-- Botón para agregar un nuevo platillo (posicionado correctamente) -->
-  <button class="add-dish-btn" (click)="openAddDishModal()">Agregar un nuevo platillo</button>
+<!-- Controles superiores -->
+<div class="menu-controls">
+  <button class="add-dish-btn" (click)="showAddDishModal = true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+    </svg>
+    Agregar Platillo
+  </button>
 
-  <input type="text" placeholder="Buscar platillo..." class="search-bar" [(ngModel)]="searchTerm" (input)="onSearch()" />
-
-  <div class="category-filter">
-    <label for="category">Filtrar por categoría:</label>
-    <select id="category" [(ngModel)]="selectedCategory">
-      <option value="">Todas</option>
-      <option *ngFor="let category of categories" [value]="category.nombre">{{ category.nombre }}</option>
-    </select>    
-    </div>
-
-  <div class="menu-grid">
-    <app-menu-card
-    *ngFor="let dish of filterDishes()"
-    [dish]="dish"
-    (editDish)="onEditDish($event)"
-    (deleteDish)="onDeleteDish($event)"
-    (viewDetail)="onViewDetail($event)">
-  </app-menu-card>
-  
-  </div>
-
-  <div class="pagination">
-    <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
-    <span>Página {{ currentPage }} de {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
-  </div>
-
-  <app-menu-detail *ngIf="selectedDishDetail" [selectedDish]="selectedDishDetail" (closeDetail)="onCloseDetail()"></app-menu-detail>
-
-   <!-- Modal para agregar un nuevo platillo -->
-  <div class="modal-overlay" *ngIf="showAddDishModal">
-    <div class="modal">
-      <h3>Agregar Nuevo Platillo</h3>
-      <form (ngSubmit)="addNewDish()">
-        <label>Nombre:</label>
-        <input type="text" [(ngModel)]="newDish.nombre" name="nombre" required />
-
-        <label>Descripción:</label>
-        <textarea [(ngModel)]="newDish.descripcion" name="descripcion" required></textarea>
-
-        <label>Precio:</label>
-        <input type="number" [(ngModel)]="newDish.precio" name="precio" required />
-
-        <label>Categoría:</label>
-        <select [(ngModel)]="newDish.id_tipo_plato" name="id_tipo_plato" required #categoria="ngModel">
-          <option [ngValue]="null" disabled>Seleccione una categoría</option>
-          <option *ngFor="let category of categories" [ngValue]="category.idTipoPadre">
-            {{ category.nombre }}
-          </option>
-        </select>
-        <!-- Ingredientes dinámicos -->
-<h4>Ingredientes</h4>
-
-<div class="ingrediente-form">
-  <label>Ingrediente:</label>
-  <select [(ngModel)]="ingredienteTemp.idIngrediente" name="idIngredienteTemp" required>
-    <option [ngValue]="null" disabled>Seleccione un ingrediente</option>
-    <option *ngFor="let producto of productos" [ngValue]="producto.id">
-      {{ producto.nombre }}
-    </option>
-  </select>
-
-  <label>Unidad de Medida:</label>
-  <input type="text" [(ngModel)]="ingredienteTemp.notacionUnidadMedida" name="unidadTemp" placeholder="kg, ml, etc." required />
-
-  <label>Cantidad:</label>
-  <input type="number" [(ngModel)]="ingredienteTemp.cantidad" name="cantidadTemp" required />
-
-  <button type="button" (click)="agregarIngrediente()">Agregar Ingrediente</button>
-</div>
-
-    <!-- Lista de ingredientes agregados -->
-    <ul class="ingredientes-lista">
-      <li *ngFor="let ingrediente of newDish.listaIngredientes; let i = index">
-        ID: {{ ingrediente.idIngrediente }} | Unidad: {{ ingrediente.notacionUnidadMedida }} | Cantidad: {{ ingrediente.cantidad }}
-        <button type="button" (click)="eliminarIngrediente(i)">❌</button>
-      </li>
-    </ul>
-        
-        <div class="modal-buttons">
-          <button type="submit">Guardar</button>
-          <button type="button" (click)="closeAddDishModal()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <!-- Modal para editar platillo existente -->
-<div class="modal-overlay" *ngIf="showEditModal">
+<!-- Modal para agregar platillo -->
+<div class="modal-overlay" *ngIf="showAddDishModal">
   <div class="modal">
-    <h3>Editar Platillo</h3>
-    <form (ngSubmit)="onSaveEdit()">
-      <label>Nombre:</label>
-      <input
-      type="text"
-      [ngModel]="editingDish?.nombre"
-      (ngModelChange)="editingDish!.nombre = $event"
-      name="editNombre"
-      required
-      />
+    <h3>Agregar nuevo platillo</h3>
 
-    <textarea
-      [ngModel]="editingDish?.descripcion"
-      (ngModelChange)="editingDish!.descripcion = $event"
-      name="editDescripcion"
-      required
-    ></textarea>
+    <label>Nombre</label>
+    <input type="text" [(ngModel)]="newDish.nombre" placeholder="Ej: Bandeja Paisa" />
 
-    <input
-      type="number"
-      [ngModel]="editingDish?.precio"
-      (ngModelChange)="editingDish!.precio = $event"
-      name="editPrecio"
-      required
-    />
+    <label>Descripción</label>
+    <textarea [(ngModel)]="newDish.descripcion" placeholder="Ej: Arroz, frijoles, carne, etc."></textarea>
 
-    <select
-      [ngModel]="editingDish?.id_tipo_plato"
-      (ngModelChange)="editingDish!.id_tipo_plato = $event"
-      name="editCategoria"
-      required
-    >
-      <option [ngValue]="null" disabled>Seleccione una categoría</option>
-      <option *ngFor="let category of categories" [ngValue]="category.idTipoPadre">
-        {{ category.nombre }}
+    <label>Precio</label>
+    <input type="number" [(ngModel)]="newDish.precio" placeholder="Ej: 25000" />
+
+    <label>Categoría</label>
+    <select [(ngModel)]="newDish.id_tipo_plato">
+      <option [value]="null" disabled selected>Seleccione una categoría</option>
+      <option *ngFor="let categoria of categories" [ngValue]="categoria.idTipoPadre">
+        {{ categoria.nombre }}
       </option>
     </select>
 
+    <hr />
 
-      <div class="modal-buttons">
-        <button type="submit">Guardar Cambios</button>
-        <button type="button" (click)="showEditModal = false">Cancelar</button>
-      </div>
-    </form>
+    <h4>Ingredientes</h4>
+
+    <div class="ingrediente-fields">
+      <select [(ngModel)]="ingredienteTemp.idIngrediente">
+        <option [ngValue]="null" disabled selected>Seleccione un ingrediente</option>
+        <option *ngFor="let prod of products" [ngValue]="prod.id">
+          {{ prod.nombre }}
+        </option>
+      </select>
+      <select [(ngModel)]="ingredienteTemp.notacionUnidadMedida">
+        <option [ngValue]="null" disabled selected>Indique la cantidad de medida</option>
+        <option *ngFor="let unit of units" [ngValue]="unit.notacion">
+          {{ unit.notacion }}
+        </option>
+      </select>
+      <input type="number" [(ngModel)]="ingredienteTemp.cantidad" placeholder="Cantidad" />
+
+      <button type="button" (click)="agregarIngrediente()" class="btn-small blue">
+        ➕ Agregar
+      </button>
+    </div>
+
+    <ul class="ingrediente-lista">
+      <li *ngFor="let ingrediente of newDish.listaIngredientes; let i = index">
+      {{ getProductNameById(ingrediente.idIngrediente) }} - {{ ingrediente.cantidad }} {{ ingrediente.notacionUnidadMedida }}
+      <button type="button" (click)="eliminarIngrediente(i)" class="btn-small red">❌</button>
+      </li>
+    </ul>
+
+    <div class="modal-buttons">
+      <button type="submit" (click)="addNewDish()">Guardar</button>
+      <button type="button" (click)="showAddDishModal = false">Cancelar</button>
+    </div>
   </div>
 </div>
 
+  <!-- Modal para editar platillo -->
+  <div class="modal-overlay" *ngIf="showEditModal && editingDish">
+    <div class="modal">
+      <h3>Editar platillo</h3>
+
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="editingDish.nombre" />
+
+      <label>Descripción</label>
+      <textarea [(ngModel)]="editingDish.descripcion"></textarea>
+
+      <label>Precio</label>
+      <input type="number" [(ngModel)]="editingDish.precio" />
+
+      <label>Categoría</label>
+      <select [(ngModel)]="editingDish.id_tipo_plato">
+        <option *ngFor="let categoria of categories" [value]="categoria.idTipoPadre">
+          {{ categoria.nombre }}
+        </option>
+      </select>
+
+      <hr />
+      <h4>Ingredientes</h4>
+
+      <div class="ingrediente-fields">
+        <select [(ngModel)]="ingredienteTemp.idIngrediente">
+          <option [ngValue]="null" disabled selected>Seleccione un ingrediente</option>
+          <option *ngFor="let prod of products" [ngValue]="prod.id">
+            {{ prod.nombre }}
+          </option>
+        </select>
+        <select [(ngModel)]="ingredienteTemp.notacionUnidadMedida">
+        <option [ngValue]="null" disabled selected>Indique la cantidad de medida</option>
+        <option *ngFor="let unit of units" [ngValue]="unit.notacion">
+          {{ unit.notacion }}
+        </option>
+      </select>
+        <input type="number" [(ngModel)]="ingredienteTemp.cantidad" placeholder="Cantidad" />
+        <button class="btn-small blue" type="button" (click)="agregarIngredienteEdit()">➕ Agregar</button>
+      </div>
+
+
+    <ul class="ingrediente-lista">
+      <li *ngFor="let ingrediente of newDish.listaIngredientes; let i = index">
+      {{ getProductNameById(ingrediente.idIngrediente) }} - {{ ingrediente.cantidad }} {{ ingrediente.notacionUnidadMedida }}
+      <button type="button" (click)="eliminarIngrediente(i)" class="btn-small red">❌</button>
+      </li>
+    </ul>
+
+      <div class="modal-buttons">
+        <button (click)="onSaveEdit()">Guardar cambios</button>
+        <button (click)="showEditModal = false">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <input type="text" placeholder="Buscar platillo..." class="search-bar" [(ngModel)]="searchTerm" (input)="onSearch()" />
+
+  <label for="category">Categoría:</label>
+  <select id="category" [(ngModel)]="selectedCategory" (change)="onSearch()">
+    <option value="">Todas</option>
+    <option *ngFor="let category of categories" [value]="category.nombre">{{ category.nombre }}</option>
+  </select>
+  <label for="status">Estado:</label>
+  <select id="status" [(ngModel)]="selectedStatus" (change)="onSearch()">
+    <option value="">Todos</option>
+    <option value="activo">Activo</option>
+    <option value="inactivo">Inactivo</option>
+  </select>
+
 </div>
+
+<!-- Tabla de inventario -->
+<table class="menu-table">
+  <thead>
+    <tr>
+
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Categoría</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let dish of filterDishes()" [class.selected]="selectedDish?.id === dish.id" (click)="selectDish(dish)">
+      <td>{{ dish.nombre }}</td>
+      <td>{{ dish.descripcion }}</td>
+      <td>${{ dish.precio }}</td>
+      <td>{{ dish.tipo_plato }}</td>
+      <td>{{ dish.activo ? 'Inactivo' : 'Activo' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Botones inferiores -->
+<div class="menu-actions">
+  <button 
+    class="edit-btn" 
+    (click)="onEditDish(selectedDish!)" 
+    [disabled]="!selectedDish">
+    Editar
+  </button>
+  
+  <button 
+    class="delete-btn" 
+    (click)="onDeleteDish(selectedDish!)" 
+    [disabled]="!selectedDish">
+    Eliminar
+  </button>
+</div>
+

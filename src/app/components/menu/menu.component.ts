@@ -1,44 +1,50 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuCardComponent } from '../menu-card/menu-card.component';
 import { platoReadDto } from '../../dto/dish/dishdto';
 import { FormsModule } from '@angular/forms';
-import { DishDetailDto } from '../../dto/dish/dishDetailDto';
-import { MenuDetailComponent } from "../menu-detail/menu-detail.component";
 import { PlatoService } from '../../services/plato.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
 import { showAlert } from '../../dto/alert';
-import { PlatoCreate } from '../../dto/dish/PlatoCreateDto';
+import { IngredientePlatoDto, PlatoCreate } from '../../dto/dish/PlatoCreateDto';
 import { TipoPlatoService } from '../../services/tipo-plato.service';
 import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
 import { productDto } from '../../dto/product/productDto';
+import { units } from '../../dto/product/units';
+import { InventoryService } from '../../services/product-service.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, MenuCardComponent, FormsModule, MenuDetailComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnInit {
 
+  //To load ingredents
+  products: productDto[]=[];
+  units: units[]=[];
+  //Dtos to get dishes
   dishes: platoReadDto[] = [];
   filteredDishes: platoReadDto[] = [];
   paginatedDishes: platoReadDto[] = [];
+  //Load categories and filters
   categories: kindDishRead[] = [];
-  productos: productDto[] = [];
-
   selectedCategory: string = '';
+  showCategoryDialog: boolean = false;
   searchTerm: string = '';
+  //Status filter
+  selectedStatus: string = ''; // "activo", "inactivo" o ""
+
+  //Pagination
   currentPage: number = 1;
   itemsPerPage: number = 4;
   totalPages: number = 1;
-  showCategoryDialog: boolean = false;
   selectedDishDetail: platoReadDto | null = null;
   //State to add
   showAddDishModal: boolean = false;
-
+  //To create a dish
   newDish: PlatoCreate = {
     nombre: '',
     descripcion: '',
@@ -46,35 +52,90 @@ export class MenuComponent implements OnInit {
     id_tipo_plato: null,
     listaIngredientes: []
   };
-  ingredienteTemp = {
-    idIngrediente: null,
-    notacionUnidadMedida: '',
-    cantidad: null
-  };
 
-
+  //Selected dish
+  selectedDish: platoReadDto | null = null;
+  selectDish(dish: platoReadDto): void {
+    this.selectedDish = dish;
+  }
+  
   //State to edit
-  editingDish: PlatoUpdate | null = null;
+  editingDish: PlatoUpdate = {
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    id_tipo_plato: 0,
+    listaIngredientes: []
+  };
+  //Ingredent to edit
+  ingredienteTemp: IngredientePlatoDto = {
+    idIngrediente: 0,
+    notacionUnidadMedida: '',
+    cantidad: 0
+  };
+  
   editingDishId: number | null = null;
   showEditModal: boolean = false;
 
-  constructor(private platoService: PlatoService, private tipoPlatoService: TipoPlatoService) {
+  constructor(private platoService: PlatoService, private tipoPlatoService: TipoPlatoService,private inventoryService: InventoryService) {
     this.updatePagination();
   }
 
   ngOnInit(): void {
     this.getAllDishes();
     this.getAllKindDishes();
-
+    this.loadProducts();
+    this.loadUnits();
+    
   }
-
-  filterDishes() {
-    return this.dishes.filter(dish => {
-      const matchesSearch = this.searchTerm === '' || dish.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesCategory = this.selectedCategory === '' || dish.tipo_plato === this.selectedCategory;
-      return matchesSearch && matchesCategory;
+  //Load ingredents to create and edit dishes 
+  loadProducts(): void {
+    this.inventoryService.getAllProducts().subscribe({
+      next: (response) => {
+        if (!response.error && response.respuesta) {
+          this.products = response.respuesta;
+        } else {
+          console.warn("La API no devolvió datos válidos.");
+          this.products = [];
+        }
+      },
+      error: (err) => {
+        console.error("Error en la petición:", err);
+        this.products = [];
+      }
     });
   }
+
+  loadUnits():void{
+    this.inventoryService.getUnits().subscribe({
+      next:(response) => {
+        if(!response.error && response.respuesta){
+          this.units= response.respuesta
+        }else{
+          console.warn("La API no devolvió datos válidos.");
+          this.units = [];
+        }
+      },
+      error: (err) =>{
+        console.error("Error en la petición:", err);
+        this.units = [];
+      }
+    })
+  }
+  //Filter all dishes
+  filterDishes() {
+    return this.dishes.filter(dish => {
+      const matchesSearch = this.searchTerm.trim() === '' || dish.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesCategory = this.selectedCategory === '' || dish.tipo_plato === this.selectedCategory;
+      const matchesStatus =
+        this.selectedStatus === '' ||
+        (this.selectedStatus === 'inactivo' && dish.activo) || //The logic of this is inversive from the back
+        (this.selectedStatus === 'activo' && !dish.activo);
+  
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }
+  
 
 
   //Method to get all kind of dishes
@@ -108,16 +169,12 @@ export class MenuComponent implements OnInit {
       },
     });
   }
-
-  //detail of the dish
-  onViewDetail(dish: platoReadDto) {
-    this.selectedDishDetail = dish;
+  //To map product's names wiht id's
+  getProductNameById(id: number): string {
+    const product = this.products.find(p => p.id === id);
+    return product ? product.nombre : `ID ${id}`;
   }
-  //Close detail view
-  onCloseDetail() {
-    this.selectedDishDetail = null;
-  }
-
+  
   openCategoryDialog(): void {
     this.showCategoryDialog = true;
   }
@@ -199,11 +256,16 @@ export class MenuComponent implements OnInit {
       return;
     }
 
-    const platoToSend = {
-      ...this.newDish,
-      precio: Number(this.newDish.precio), // esto sí es válido y útil
-      id_tipo_plato: this.newDish.id_tipo_plato // ya es number, no hace falta convertir
-    };
+  const platoToSend = {
+    ...this.newDish,
+    precio: Number(this.newDish.precio),
+    id_tipo_plato: Number(this.newDish.id_tipo_plato),
+    listaIngredientes: this.newDish.listaIngredientes.map(i => ({
+      idIngrediente: Number(i.idIngrediente),
+      notacionUnidadMedida: i.notacionUnidadMedida,
+      cantidad: parseFloat(String(i.cantidad)) || 0
+    }))
+  };
     console.log('Tipo de id_tipo_plato:', typeof this.newDish.id_tipo_plato);
     console.log('Valor de id_tipo_plato:', this.newDish.id_tipo_plato);
 
@@ -225,28 +287,33 @@ export class MenuComponent implements OnInit {
       }
     });
   }
-  agregarIngrediente(): void {
-    const { idIngrediente, notacionUnidadMedida, cantidad } = this.ingredienteTemp;
-  
-    if (idIngrediente && notacionUnidadMedida.trim() && !isNaN(Number(cantidad)) && Number(cantidad) > 0) {
-      this.newDish.listaIngredientes.push({
-        idIngrediente,
-        notacionUnidadMedida: notacionUnidadMedida.trim(),
-        cantidad: Number(cantidad)
-      });
-    
-      // Reset temporal
-      this.ingredienteTemp = {
-        idIngrediente: null,
-        notacionUnidadMedida: '',
-        cantidad: null
-      };
-    } else {
-      showAlert('Todos los campos del ingrediente son obligatorios y la cantidad debe ser mayor a 0', 'error');
-    }
-    
-    
+
+  //Function to add a ingredent on addDishModal
+agregarIngrediente(): void {
+  const { idIngrediente, notacionUnidadMedida, cantidad } = this.ingredienteTemp;
+
+  if (
+    idIngrediente !== null &&
+    notacionUnidadMedida.trim() !== '' &&
+    cantidad !== null &&
+    Number(cantidad) > 0
+  ) {
+    this.newDish.listaIngredientes.push({
+      idIngrediente,
+      notacionUnidadMedida: notacionUnidadMedida.trim(),
+      cantidad: Number(cantidad)
+    });
+
+    this.ingredienteTemp = {
+      idIngrediente: 0,
+      notacionUnidadMedida: '',
+      cantidad: 0
+    };
+  } else {
+    showAlert('Todos los campos del ingrediente son obligatorios y la cantidad debe ser mayor a 0', 'error');
   }
+}
+
   
   eliminarIngrediente(index: number): void {
     this.newDish.listaIngredientes.splice(index, 1);
@@ -269,41 +336,70 @@ onEditDish(dish: platoReadDto): void {
   this.editingDish = {
     nombre: dish.nombre,
     precio: dish.precio,
-    id_tipo_plato: Number(dish.tipo_plato), //valor numérico correcto ya viene del backend
-    descripcion: dish.descripcion
+    id_tipo_plato: Number(dish.tipo_plato),
+    descripcion: dish.descripcion,
+    listaIngredientes: dish.listaIngredientes ?? [] // Asegúrate que venga del backend
   };
   this.showEditModal = true;
 }
 
+//Function to add a ingredent on EditDishModali
+agregarIngredienteEdit(): void {
+  const { idIngrediente, notacionUnidadMedida, cantidad } = this.ingredienteTemp;
 
+  if (
+    idIngrediente !== null &&
+    notacionUnidadMedida.trim() !== '' &&
+    cantidad !== null &&
+    Number(cantidad) > 0
+  ) {
+    this.editingDish.listaIngredientes.push({
+      idIngrediente,
+      notacionUnidadMedida: notacionUnidadMedida.trim(),
+      cantidad: Number(cantidad)
+    });
 
-  onSaveEdit(): void {
-    if (this.editingDishId !== null && this.editingDish) {
-      console.log('Enviando:', this.editingDish, 'id: ',this.editingDishId ); // Para depuración
-      this.platoService.editPlato(this.editingDishId, this.editingDish).subscribe({
-        next: (response: MessageDTO<platoReadDto>) => {
-          if (!response.error) {
-            console.log('Plato actualizado correctamente:', response.respuesta);
-            showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
-            this.getAllDishes();
-            // Actualizar la lista de platos
-            const index = this.dishes.findIndex(d => d.id === response.respuesta.id);
-            if (index !== -1) {
-              this.dishes[index] = response.respuesta;
-              this.onSearch(); // Actualizar la vista
-            }
-            this.showEditModal = false;
-          } else {
-            console.error('Error al actualizar el plato:', response);
-            showAlert('❌ Error al editar el plato.', 'error');
-          }
-        },
-        error: (err) => {
-          console.error('Error en la actualización:', err);
-        },
-      });
-    }
+    this.ingredienteTemp = {
+      idIngrediente: 0,
+      notacionUnidadMedida: '',
+      cantidad: 0
+    };
+  } else {
+    showAlert('Todos los campos del ingrediente son obligatorios y la cantidad debe ser mayor a 0', 'error');
   }
+}
+
+
+eliminarIngredienteEdit(index: number): void {
+  this.editingDish.listaIngredientes.splice(index, 1);
+}
+
+
+
+onSaveEdit(): void {
+  if (this.editingDishId !== null && this.editingDish) {
+    this.platoService.editPlato(this.editingDishId, this.editingDish).subscribe({
+      next: (response: MessageDTO<platoReadDto>) => {
+        if (!response.error) {
+          showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
+          this.getAllDishes();
+          const index = this.dishes.findIndex(d => d.id === response.respuesta.id);
+          if (index !== -1) {
+            this.dishes[index] = response.respuesta;
+            this.onSearch();
+          }
+          this.showEditModal = false;
+        } else {
+          showAlert('❌ Error al editar el plato.', 'error');
+        }
+      },
+      error: (err) => {
+        showAlert('Error en la actualización: ' + err.message, 'error');
+      },
+    });
+  }
+}
+
 
   //Method to connect with the service to delete a specific dish
   onDeleteDish(dish: platoReadDto): void {

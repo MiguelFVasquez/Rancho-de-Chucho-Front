@@ -4,9 +4,11 @@
     margin-top: 16px;
   }
   .inventory-table tr.selectedProduct {
-    background-color: #0ea4b8 !important;
+    background-color: #b3ddf0 !important;
   }
-  
+  .inventory-table tr.selectedProduct:hover {
+    background-color: #cae7f3 !important;
+  }
   .inventory-table th,
   .inventory-table td {
     border: 1px solid #ddd;
@@ -24,7 +26,7 @@
   }
   
   .inventory-table tr:hover {
-    background-color: #f1f1f1;
+    background-color: #cae7f3;
   }
   .icon-button {
     background: none;
