@@ -44,7 +44,12 @@ export class LoginComponent {
         this.router.navigate(['/administrator/inventory']);
         return;
       }
-  
+      //Staff hardcodeado
+      else if (username === 'staff@gmail.com' && password === 'staff1234') {
+        this.router.navigate(['/staff/order']);
+        return;
+      }
+      
       const dto: LoginDto = {
         username: username,
         password: password

@@ -9,6 +9,8 @@ import { InventoryComponent } from './components/inventory/inventory.component';
 import { MeseroComponent } from './components/mesero/mesero.component';
 import { MeseroMenuComponent } from './components/mesero-menu/mesero-menu.component';
 import { MeseroOrdenComponent } from './components/mesero-orden/mesero-orden.component';
+import { StaffComponent } from './components/staff/staff.component';
+import { StaffOrdenComponent } from './components/staff-orden/staff-orden.component';
 
 
 
@@ -39,6 +41,17 @@ export const routes: Routes = [
         ]
 
     },
+    /*Redirección al perfil del staff */
+    {
+        path:'staff',
+        component:StaffComponent,
+        children: [
+            {path: '', redirectTo:'order', pathMatch:'full'},
+            {path: 'order', component:StaffOrdenComponent}
+        ]
+    },
+
+
     {path: '**', pathMatch:"full", redirectTo:""} /**Redirección a la página principal */ 
 
 ];

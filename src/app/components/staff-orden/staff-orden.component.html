@@ -1,0 +1,19 @@
+<div class="orden-container" *ngIf="tieneOrdenesPermitidas(); else sinOrdenes">
+  <div class="ordenes-list">
+    <div *ngFor="let estado of estadosPermitidos">
+      <ng-container *ngIf="ordenesPorEstado && ordenesPorEstado[estado] && ordenesPorEstado[estado].length > 0">        <h3 class="estado-titulo">{{ estado }}</h3>
+        <div class="ordenes-por-estado">
+          <div *ngFor="let orden of ordenesPorEstado[estado]" class="orden-card-container">
+            <app-orden-card [orden]="orden"></app-orden-card>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #sinOrdenes>
+  <div class="mensaje-vacio">
+    <p>📭 No hay órdenes en proceso o esperando en este momento.</p>
+  </div>
+</ng-template>

@@ -54,7 +54,6 @@ export class MeseroOrdenComponent {
     this.getAllOrders();
     this.getAllDishes();
     this.obtenerCedulaMesero();
-    this.getAllOrders();
     this.getAllDishes();
   }
   obtenerCedulaMesero(): void {
@@ -100,23 +99,23 @@ export class MeseroOrdenComponent {
     });
   }
 
-  //Method to get all orders
-getAllOrders(): void {
-  this.orderService.getAllOrders(this.paginaActual, this.ordenesPorPagina).subscribe({
-    next: (response) => {
-      if (response && response.ordenes) {
-        this.ordenes = response.ordenes;
-        this.totalPaginas = response.totalPages;
-        this.agruparOrdenesPorEstado(); // Si estás agrupando por estado
-      } else {
-        console.error('Respuesta inválida del servidor');
+    //Method to get all orders
+  getAllOrders(): void {
+    this.orderService.getAllOrders(this.paginaActual, this.ordenesPorPagina).subscribe({
+      next: (response) => {
+        if (response && response.ordenes) {
+          this.ordenes = response.ordenes;
+          this.totalPaginas = response.totalPages;
+          this.agruparOrdenesPorEstado(); // Si estás agrupando por estado
+        } else {
+          console.error('Respuesta inválida del servidor');
+        }
+      },
+      error: (err) => {
+        console.error('Error en la petición:', err);
       }
-    },
-    error: (err) => {
-      console.error('Error en la petición:', err);
-    }
-  });
-}
+    });
+  }
 
 
 

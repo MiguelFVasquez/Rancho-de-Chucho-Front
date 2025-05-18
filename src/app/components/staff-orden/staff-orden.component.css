@@ -1,0 +1,35 @@
+.orden-container {
+  padding: 1.5rem;
+}
+
+.estado-titulo {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.25rem;
+}
+
+.ordenes-por-estado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.orden-card-container {
+  flex: 1 1 300px;
+  max-width: 100%;
+}
+
+.mensaje-vacio {
+  padding: 2rem;
+  text-align: center;
+  color: #888;
+  font-size: 1.2rem;
+  background-color: #f8f8f8;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin: 2rem;
+}
