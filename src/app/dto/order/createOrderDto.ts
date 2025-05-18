@@ -5,7 +5,7 @@ export interface OrdenCreateDto {
 }
   
 export interface PlatilloCantidadDTO {
-    nombre: string;
+    idPlato:number;
     cantidad: number;
 }
   

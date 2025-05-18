@@ -51,10 +51,11 @@
 
       <!-- Selección de platillos -->
       <div *ngFor="let platillo of platillosSeleccionados; let i = index" class="platillo-group">
-        <select [(ngModel)]="platillo.nombre" class="select-platillo">
-          <option value="" disabled selected>Seleccione un platillo</option>
-          <option *ngFor="let item of dishes" [value]="item.nombre">{{ item.nombre }}</option>
-        </select>
+       <select [(ngModel)]="platillo.plato" class="select-platillo">
+        <option [ngValue]="null" disabled>Seleccione un platillo</option>
+        <option *ngFor="let item of dishesActivos" [ngValue]="item">{{ item.nombre }}</option>
+      </select>
+
         <input type="number" [(ngModel)]="platillo.cantidad"
         min="1" class="input-cantidad"
         (keypress)="validarTecla($event)"

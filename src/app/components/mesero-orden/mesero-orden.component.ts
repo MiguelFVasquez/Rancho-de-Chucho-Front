@@ -11,6 +11,7 @@ import { ordenReadDto } from '../../dto/order/orderReadDto';
 import { OrderService } from '../../services/order.service';
 import { Message } from '../../dto/message';
 import { PlatilloCantidadDTO, OrdenCreateDto } from '../../dto/order/createOrderDto';
+import { PlatilloSeleccionado } from '../../dto/order/dishSelected';
 @Component({
   selector: 'app-mesero-orden',
   standalone: true,
@@ -22,9 +23,11 @@ export class MeseroOrdenComponent {
 
   ordenes:ordenReadDto[]=[]
   mostrarModal = false;
-  platillosSeleccionados: { nombre: string; cantidad: number }[] = [];
+  platillosSeleccionados: PlatilloSeleccionado[] = [];
   paginaActual = 0;
   ordenesPorPagina = 4;
+  totalPaginas: number = 0;
+ 
   ordenSeleccionada: any = null;
   errores: string[] = [];
 
@@ -32,7 +35,7 @@ export class MeseroOrdenComponent {
   ordenesPorEstado: { [estado: string]: any[] } = {};
   //Platillos
   dishes: platoReadDto[] = [];
-
+  dishesActivos: platoReadDto[] = [];
   //to new order
   mesaSeleccionada: number | null = null;
   mesasDisponibles: { id: string, nombre: string }[] = [
@@ -86,6 +89,7 @@ export class MeseroOrdenComponent {
       next: (response: MessageDTO<platoReadDto[]>) => {
         if (!response.error) {
           this.dishes = response.respuesta;
+          this.dishesActivos=response.respuesta.filter(platoReadDto => !platoReadDto.activo);
         } else {
           console.error('Error obteniendo platos:', response);
         }
@@ -97,20 +101,24 @@ export class MeseroOrdenComponent {
   }
 
   //Method to get all orders
-  getAllOrders():void{
-    this.orderService.getAllOrders().subscribe({
-      next: (response:Message<ordenReadDto[]>) =>{
-        if(!response.error){
-          this.ordenes = response.respuesta;
-        }else{
-          console.error('Error obteniendo las ordenes' ,response.mensaje)
-        }
-      },
-      error: (err) =>{
-        console.error('Error en la petición:', err);
+getAllOrders(): void {
+  this.orderService.getAllOrders(this.paginaActual, this.ordenesPorPagina).subscribe({
+    next: (response) => {
+      if (response && response.ordenes) {
+        this.ordenes = response.ordenes;
+        this.totalPaginas = response.totalPages;
+        this.agruparOrdenesPorEstado(); // Si estás agrupando por estado
+      } else {
+        console.error('Respuesta inválida del servidor');
       }
-    })
-  }
+    },
+    error: (err) => {
+      console.error('Error en la petición:', err);
+    }
+  });
+}
+
+
 
   //Abre el dialogo para crear una nueva orden-
   abrirModal() {
@@ -124,7 +132,7 @@ export class MeseroOrdenComponent {
   }
   //Agrega los campos para seleccionar un platillo, al igual que la cantidad.
   agregarPlatillo() {
-    this.platillosSeleccionados.push({ nombre: "", cantidad: 1 });
+    this.platillosSeleccionados.push({ plato: null as any, cantidad: 1 });
   }
   //Elimina el platillo de la orden
   eliminarPlatillo(index: number) {
@@ -134,60 +142,61 @@ export class MeseroOrdenComponent {
 
   //Función que crea la orden
   confirmarOrden() {
-    this.errores = [];
-    this.errorMesa = '';
+  this.errores = [];
+  this.errorMesa = '';
 
-    if (!this.mesaSeleccionada) {
-      this.errorMesa = 'Debe seleccionar una mesa.';
+  if (!this.mesaSeleccionada) {
+    this.errorMesa = 'Debe seleccionar una mesa.';
+    return;
+  }
+
+  if (this.platillosSeleccionados.length === 0) {
+    alert("Debe agregar al menos un platillo.");
+    return;
+  }
+
+  const detalles: PlatilloCantidadDTO[] = [];
+
+  for (let i = 0; i < this.platillosSeleccionados.length; i++) {
+    const platillo = this.platillosSeleccionados[i];
+    if (!platillo.plato || !platillo.plato.id || !platillo.cantidad || platillo.cantidad <= 0) {
+      this.errores[i] = 'Debe seleccionar un platillo y una cantidad válida';
       return;
+    } else {
+      this.errores[i] = '';
     }
 
-    if (this.platillosSeleccionados.length === 0) {
-      alert("Debe agregar al menos un platillo.");
-      return;
-    }
-
-    const detalles: PlatilloCantidadDTO[] = [];
-
-    for (let i = 0; i < this.platillosSeleccionados.length; i++) {
-      const platillo = this.platillosSeleccionados[i];
-      if (!platillo.nombre || !platillo.cantidad || platillo.cantidad <= 0) {
-        this.errores[i] = 'Debe ingresar un nombre y una cantidad válida';
-        return;
-      } else {
-        this.errores[i] = '';
-      }
-
-      detalles.push({
-        nombre: platillo.nombre,
-        cantidad: platillo.cantidad,
-      });
-    }
-
-    const nuevaOrden: OrdenCreateDto = {
-      idMesa: Number(this.mesaSeleccionada),
-      cedulaMesero: this.cedulaMesero,
-      platillos: detalles,
-    };
-    console.log('Orden a enviar:', nuevaOrden);
-
-
-    this.orderService.createOrder(nuevaOrden).subscribe({
-      next: (response) => {
-        if (!response.error) {
-          alert('✅ Orden creada con éxito');
-          this.cerrarModal();
-          this.getAllOrders(); // Refrescar lista
-        } else {
-          alert('❌ Error al crear la orden: ' + response.mensaje);
-        }
-      },
-      error: (err) => {
-        console.error('Error al crear orden:', err);
-        alert('❌ Error en la comunicación con el servidor');
-      }
+    detalles.push({
+      idPlato: platillo.plato.id,
+      cantidad: platillo.cantidad,
     });
   }
+
+  const nuevaOrden: OrdenCreateDto = {
+    idMesa: Number(this.mesaSeleccionada),
+    cedulaMesero: this.cedulaMesero,
+    platillos: detalles,
+  };
+
+  console.log('Orden a enviar:', nuevaOrden);
+
+  this.orderService.createOrder(nuevaOrden).subscribe({
+    next: (response) => {
+      if (!response.error) {
+        alert('✅ Orden creada con éxito');
+        this.cerrarModal();
+        this.getAllOrders(); // Refrescar lista
+      } else {
+        alert('❌ Error al crear la orden: ' + response.mensaje);
+      }
+    },
+    error: (err) => {
+      console.error('Error al crear orden:', err);
+      alert('❌ Error en la comunicación con el servidor');
+    }
+  });
+}
+
 
 //-------------CANCELAR UNA ORDEN-----
   cancelarOrdenDesdePadre(id: number) {
@@ -222,24 +231,18 @@ export class MeseroOrdenComponent {
 
 //-----------PAGINACIÓN DE LAS ORDENES-----------
 
-  get ordenesPaginadas() {
-    const inicio = this.paginaActual * this.ordenesPorPagina;
-    return this.ordenes.slice(inicio, inicio + this.ordenesPorPagina);
-  }
-
-  get totalPaginas(): number {
-    return Math.ceil(this.ordenes.length / this.ordenesPorPagina);
-  }
-
   avanzarPagina() {
     if (this.paginaActual + 1 < this.totalPaginas) {
       this.paginaActual++;
+      this.getAllOrders(); // cargar siguiente página
     }
   }
 
   retrocederPagina() {
     if (this.paginaActual > 0) {
       this.paginaActual--;
+      this.getAllOrders(); // cargar página anterior
     }
   }
+
 }

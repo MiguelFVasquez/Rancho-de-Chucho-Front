@@ -6,6 +6,7 @@ import { MessageDTO } from "../dto/messageDto";
 import { ordenReadDto } from "../dto/order/orderReadDto";
 import { OrdenCreateDto } from "../dto/order/createOrderDto";
 import { environment, local } from "../env/env";
+import { OrdenResponseSet } from "../dto/order/ordenResponseSet";
 
 @Injectable({
   providedIn: "root",
@@ -16,14 +17,19 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   //Method to get all orders
-  getAllOrders(): Observable<Message<ordenReadDto[]>> {
-    return this.http.get<Message<ordenReadDto[]>>(`${this.testURL}/getAll`);
+  getAllOrders(pageNo: number, pageSize: number): Observable<OrdenResponseSet<ordenReadDto>> {
+    const params = {
+      pageNo: pageNo.toString(),
+      pageSize: pageSize.toString()
+    };
+    return this.http.get<OrdenResponseSet<ordenReadDto>>(`${this.testURL}/getOrdenes`, { params });
   }
+
 
   //Method to create a new order
   createOrder(newOrder: OrdenCreateDto): Observable<Message> {
     return this.http.post<Message<OrdenCreateDto>>(
-      `${this.testURL}/save`,newOrder,);
+      `${this.testURL}/open`,newOrder,);
   }
 
   // Método para cancelar una orden
