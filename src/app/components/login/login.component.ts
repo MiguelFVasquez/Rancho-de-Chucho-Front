@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LoginDto } from '../../dto/login/LoginDto';
 import { AuthService } from '../../services/auth.service';
 import { showAlert } from '../../dto/alert';
+import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,7 +18,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private storageService:StorageService) {
     // 💡 Configuración del formulario con validaciones
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]], // username sin validator
@@ -59,7 +60,7 @@ export class LoginComponent {
         next: (response) => {
           if (!response.error) {
             //Se guarda la información en local storage
-            localStorage.setItem('userSession', JSON.stringify(response.respuesta));
+            this.storageService.saveUserSession(response.respuesta);           
             //  Redirigir al componente del mesero si se valida correctamente
             this.router.navigate(['/mesero']);
             

@@ -2,20 +2,23 @@
     <!-- Botón de Iniciar Orden (Siempre visible) -->
     <button class="btn-iniciar" (click)="abrirModal()">Iniciar Orden</button>
   
-    <!-- Contenedor de órdenes en fila -->
-    <div class="ordenes-list">
-      <div *ngFor="let estado of getEstadosOrdenados()">
+  <!-- Contenedor de órdenes separadas por estado -->
+  <div *ngIf="tieneOrdenes(); else sinOrdenes" class="ordenes-list">
+    <div *ngFor="let estado of getEstadosOrdenados()">
+       <ng-container *ngIf="ordenesPorEstado && ordenesPorEstado[estado] && ordenesPorEstado[estado].length > 0">
         <h3 class="estado-titulo">{{ estado }}</h3>
         <div class="ordenes-por-estado">
           <div *ngFor="let orden of ordenesPorEstado[estado]" class="orden-card-container">
             <app-orden-card 
-              [orden]="orden" 
+              [orden]="orden"
               (verDetalles)="abrirDetalleOrden($event)">
             </app-orden-card>
           </div>
         </div>
-      </div>
-    </div>    
+      </ng-container>
+    </div>
+  </div>
+
   
     <!-- Paginador -->
     <div class="paginador">
@@ -25,6 +28,11 @@
     </div>
   </div>
 
+  <ng-template #sinOrdenes>
+    <div class="mensaje-vacio">
+      <p>📭 No hay órdenes registradas por el momento.</p>
+    </div>
+  </ng-template>
 <!-- Modal de Detalle de Orden -->
 <app-detail-order
   *ngIf="ordenSeleccionada"

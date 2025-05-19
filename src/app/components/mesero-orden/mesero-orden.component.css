@@ -6,6 +6,27 @@
   text-align: center;
 }
 
+.estado-titulo {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.25rem;
+}
+
+.ordenes-por-estado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.orden-card-container {
+  flex: 1 1 300px;
+  max-width: 100%;
+}
+
+
 /* Botón de iniciar orden */
 .btn-iniciar {
   background-color: #097887;
@@ -23,20 +44,6 @@
   background-color: #065f6a;
 }
 
-/* Contenedor de órdenes */
-.ordenes-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap; /* Permite que las órdenes se acomoden en varias filas si no caben */
-  gap: 40px;
-  padding: 2rem 1rem;
-}
-
-.orden-card-container {
-  flex: 0 1 calc(25% - 40px); /* Ajusta el cálculo por el nuevo gap */
-  width: 250px;
-  margin: 10px 0; /* Agrega margen vertical */
-}
 
 /* 🔹 Responsive para tablets y móviles 🔹 */
 @media (max-width: 1024px) {
@@ -252,6 +259,7 @@
     cursor: pointer;
     transition: background 0.3s ease;
   }
+
   
   .paginador button:disabled {
     background-color: #cccccc;

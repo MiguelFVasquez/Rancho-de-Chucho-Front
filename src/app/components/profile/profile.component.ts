@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioReadDto } from '../../dto/login/UsuarioReadDto'; 
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,16 +16,13 @@ export class ProfileComponent implements OnInit {
   showPassword = false;
   user: UsuarioReadDto | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private storageService:StorageService) {}
 
   ngOnInit(): void {
-    const userData = localStorage.getItem('userSession');
-    if (userData) {
-      this.user = JSON.parse(userData);
-    } else {
-      // Si no hay sesión, redirige al login
+    this.user = this.storageService.getUserSession();
+    if (!this.user) {
       this.router.navigate(['/administrator']);
-    }
+  }
     
 
   }
@@ -34,7 +32,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('userSession');
-    this.router.navigate(['/logini']);
+  this.storageService.clearUserSession();
+  this.router.navigate(['/']);
   }
 }

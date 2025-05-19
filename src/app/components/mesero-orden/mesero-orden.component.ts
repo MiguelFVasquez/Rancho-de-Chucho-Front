@@ -12,6 +12,7 @@ import { OrderService } from '../../services/order.service';
 import { Message } from '../../dto/message';
 import { PlatilloCantidadDTO, OrdenCreateDto } from '../../dto/order/createOrderDto';
 import { PlatilloSeleccionado } from '../../dto/order/dishSelected';
+import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-mesero-orden',
   standalone: true,
@@ -43,24 +44,24 @@ export class MeseroOrdenComponent {
     { id: "2", nombre: "Mesa 2" },
     { id: "3", nombre: "Mesa 3" },
     { id: "4", nombre: "Mesa 4" }
-  ]; // Puedes traerlas desde el backend si prefieres
+  ];
   errorMesa: string = "";
   cedulaMesero = '1111';
 
-  constructor(private platoService: PlatoService, private orderService:OrderService) {
+  constructor(
+    private platoService: PlatoService, 
+    private orderService:OrderService,
+    private storageService:StorageService) {
 
   }
   ngOnInit(): void {
     this.getAllOrders();
-    this.getAllDishes();
     this.obtenerCedulaMesero();
-    this.getAllDishes();
   }
   obtenerCedulaMesero(): void {
-    const userSession = localStorage.getItem('userSession');
+    const userSession = this.storageService.getUserSession();
     if (userSession) {
-      const usuario = JSON.parse(userSession);
-      this.cedulaMesero = usuario.cedula; // Asegúrate que la propiedad se llame así
+      this.cedulaMesero = userSession.cedula; 
     }
   }
 
@@ -80,8 +81,9 @@ export class MeseroOrdenComponent {
     return Object.keys(this.ordenesPorEstado).sort();
   }
 
-
-
+  tieneOrdenes(): boolean {
+    return Object.values(this.ordenesPorEstado).some(lista => lista.length > 0);
+  }
   //Method to get all dishes
   getAllDishes(): void {
     this.platoService.getAllDishs().subscribe({
@@ -147,7 +149,7 @@ export class MeseroOrdenComponent {
   if (!this.mesaSeleccionada) {
     this.errorMesa = 'Debe seleccionar una mesa.';
     return;
-  }
+  } 
 
   if (this.platillosSeleccionados.length === 0) {
     alert("Debe agregar al menos un platillo.");
