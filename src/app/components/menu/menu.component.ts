@@ -7,6 +7,7 @@ import { MessageDTO } from '../../dto/messageDto';
 import { PlatoUpdate } from '../../dto/dish/PlatoUpdateDto';
 import { showAlert } from '../../dto/alert';
 import { IngredientePlatoDto, PlatoCreate } from '../../dto/dish/PlatoCreateDto';
+import { ingredienteDetail, ingredientePlato } from '../../dto/dish/ingredientePlatoDto';
 import { TipoPlatoService } from '../../services/tipo-plato.service';
 import { kindDishRead } from '../../dto/category-dish/categoryReadDto';
 import { productDto } from '../../dto/product/productDto';
@@ -73,6 +74,7 @@ export class MenuComponent implements OnInit {
     notacionUnidadMedida: '',
     cantidad: 0
   };
+  ingredientesPlato: ingredienteDetail[] = []; // Definición real
   
   editingDishId: number | null = null;
   showEditModal: boolean = false;
@@ -129,8 +131,8 @@ export class MenuComponent implements OnInit {
       const matchesCategory = this.selectedCategory === '' || dish.tipo_plato === this.selectedCategory;
       const matchesStatus =
         this.selectedStatus === '' ||
-        (this.selectedStatus === 'inactivo' && dish.activo) || //The logic of this is inversive from the back
-        (this.selectedStatus === 'activo' && !dish.activo);
+        (this.selectedStatus === 'activo' && dish.activo) || //The logic of this is inversive from the back
+        (this.selectedStatus === 'inactivo' && !dish.activo);
   
       return matchesSearch && matchesCategory && matchesStatus;
     });
@@ -169,6 +171,7 @@ export class MenuComponent implements OnInit {
       },
     });
   }
+
   //To map product's names wiht id's
   getProductNameById(id: number): string {
     const product = this.products.find(p => p.id === id);
@@ -338,10 +341,27 @@ onEditDish(dish: platoReadDto): void {
     precio: dish.precio,
     id_tipo_plato: Number(dish.tipo_plato),
     descripcion: dish.descripcion,
-    listaIngredientes: dish.listaIngredientes ?? [] // Asegúrate que venga del backend
+    listaIngredientes:  dish.listaIngredientes ?? []
   };
   this.showEditModal = true;
+    // Fetch de ingredientes existentes
+   this.platoService.getIngredentDish(dish.id).subscribe({
+    next: ({ error, respuesta }) => {
+      if (!error && respuesta) {
+        // aquí ya tomas directamente el array
+        this.ingredientesPlato = respuesta.listaIngredientes;
+      } else {
+        showAlert('No se pudieron cargar los ingredientes', 'error');
+      }
+    },
+    error: (e) => {
+      console.error('Error detalle al cargar ingredientes:', e);
+      showAlert('Error cargando ingredientes', 'error');
+    }
+  });
 }
+
+
 
 //Function to add a ingredent on EditDishModali
 agregarIngredienteEdit(): void {
@@ -372,6 +392,12 @@ agregarIngredienteEdit(): void {
 
 eliminarIngredienteEdit(index: number): void {
   this.editingDish.listaIngredientes.splice(index, 1);
+}
+/** Quita un ingrediente que vino del backend */
+quitarIngredienteExistente(index: number): void {
+  // opcional: podrías añadirlo a editingDish.listaIngredientes
+  // o simplemente eliminarlo de la lista de backend
+  this.ingredientesPlato.splice(index, 1);
 }
 
 

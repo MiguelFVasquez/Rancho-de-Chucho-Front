@@ -21,11 +21,18 @@
 
   
     <!-- Paginador -->
-    <div class="paginador">
-      <button (click)="retrocederPagina()" [disabled]="paginaActual === 0">Anterior</button>
-      <span>Página {{ paginaActual + 1 }} de {{ totalPaginas }}</span>
-      <button (click)="avanzarPagina()" [disabled]="paginaActual + 1 >= totalPaginas">Siguiente</button>
-    </div>
+    <div class="pagination">
+      <button (click)="retrocederPagina()" [disabled]="paginaActual === 0">⬅️ Anterior</button>
+
+      <button *ngFor="let page of totalPaginasArray; let i = index"
+              [disabled]="i === paginaActual"
+              (click)="irAPagina(i)">
+        {{ i + 1 }}
+    </button>
+
+  <button (click)="avanzarPagina()" [disabled]="paginaActual + 1 >= totalPaginas">Siguiente ➡️</button>
+</div>
+
   </div>
 
   <ng-template #sinOrdenes>

@@ -26,7 +26,7 @@ export class MeseroOrdenComponent {
   mostrarModal = false;
   platillosSeleccionados: PlatilloSeleccionado[] = [];
   paginaActual = 0;
-  ordenesPorPagina = 4;
+  ordenesPorPagina = 16;
   totalPaginas: number = 0;
  
   ordenSeleccionada: any = null;
@@ -90,7 +90,7 @@ export class MeseroOrdenComponent {
       next: (response: MessageDTO<platoReadDto[]>) => {
         if (!response.error) {
           this.dishes = response.respuesta;
-          this.dishesActivos=response.respuesta.filter(platoReadDto => !platoReadDto.activo);
+          this.dishesActivos=response.respuesta.filter(platoReadDto => platoReadDto.activo);
         } else {
           console.error('Error obteniendo platos:', response);
         }
@@ -245,5 +245,15 @@ export class MeseroOrdenComponent {
       this.getAllOrders(); // cargar página anterior
     }
   }
+  
+  get totalPaginasArray(): number[] {
+    return Array(this.totalPaginas).fill(0).map((_, i) => i);
+  } 
+  
+  irAPagina(pagina: number): void {
+    this.paginaActual = pagina;
+    this.getAllOrders();
+  }
 
+  
 }

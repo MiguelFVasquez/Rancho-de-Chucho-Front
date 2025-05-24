@@ -89,33 +89,65 @@
       </select>
 
       <hr />
-      <h4>Ingredientes</h4>
+      <h4>Ingredientes actuales</h4>
+      <ul class="ingrediente-lista">
+        <li *ngFor="let ing of ingredientesPlato; let i = index">
+          {{ ing.nombre }}
+          <button
+            type="button"
+            class="btn-small red"
+            (click)="quitarIngredienteExistente(i)"
+          >❌</button>
+        </li>
+        <li *ngIf="ingredientesPlato.length === 0" class="empty-msg">
+          Este platillo no tenía ingredientes previos.
+        </li>
+      </ul>
 
+      <hr />
+      <h4>Agregar / Nuevos Ingredientes</h4>
       <div class="ingrediente-fields">
-        <select [(ngModel)]="ingredienteTemp.idIngrediente">
-          <option [ngValue]="null" disabled selected>Seleccione un ingrediente</option>
+        <select [(ngModel)]="ingredienteTemp.idIngrediente" name="editIngId">
+          <option [ngValue]="0" disabled>Selecciona ingrediente</option>
           <option *ngFor="let prod of products" [ngValue]="prod.id">
             {{ prod.nombre }}
           </option>
         </select>
-        <select [(ngModel)]="ingredienteTemp.notacionUnidadMedida">
-        <option [ngValue]="null" disabled selected>Indique la cantidad de medida</option>
-        <option *ngFor="let unit of units" [ngValue]="unit.notacion">
-          {{ unit.notacion }}
-        </option>
-      </select>
-        <input type="number" [(ngModel)]="ingredienteTemp.cantidad" placeholder="Cantidad" />
-        <button class="btn-small blue" type="button" (click)="agregarIngredienteEdit()">➕ Agregar</button>
+
+        <select [(ngModel)]="ingredienteTemp.notacionUnidadMedida" name="editIngUnit">
+          <option [value]="''" disabled>Unidad (g, ml...)</option>
+          <option *ngFor="let u of units" [value]="u.notacion">
+            {{ u.notacion }}
+          </option>
+        </select>
+
+        <input
+          type="number"
+          [(ngModel)]="ingredienteTemp.cantidad"
+          name="editIngQty"
+          placeholder="Cantidad" />
+
+        <button
+          class="btn-small blue"
+          type="button"
+          (click)="agregarIngredienteEdit()"
+        >➕ Agregar</button>
       </div>
 
-
-    <ul class="ingrediente-lista">
-      <li *ngFor="let ingrediente of newDish.listaIngredientes; let i = index">
-      {{ getProductNameById(ingrediente.idIngrediente) }} - {{ ingrediente.cantidad }} {{ ingrediente.notacionUnidadMedida }}
-      <button type="button" (click)="eliminarIngrediente(i)" class="btn-small red">❌</button>
-      </li>
-    </ul>
-
+      <ul class="ingrediente-lista">
+        <li *ngFor="let ing of editingDish.listaIngredientes; let j = index">
+          {{ getProductNameById(ing.idIngrediente) }}
+          — {{ ing.cantidad }} {{ ing.notacionUnidadMedida }}
+          <button
+            class="btn-small red"
+            type="button"
+            (click)="eliminarIngredienteEdit(j)"
+          >❌</button>
+        </li>
+        <li *ngIf="editingDish.listaIngredientes.length === 0" class="empty-msg">
+          No has agregado nuevos ingredientes.
+        </li>
+      </ul>
       <div class="modal-buttons">
         <button (click)="onSaveEdit()">Guardar cambios</button>
         <button (click)="showEditModal = false">Cancelar</button>
@@ -159,7 +191,7 @@
       <td>{{ dish.descripcion }}</td>
       <td>${{ dish.precio }}</td>
       <td>{{ dish.tipo_plato }}</td>
-      <td>{{ dish.activo ? 'Inactivo' : 'Activo' }}</td>
+      <td>{{ dish.activo ? 'Acivo' : 'Inactivo' }}</td>
     </tr>
   </tbody>
 </table>

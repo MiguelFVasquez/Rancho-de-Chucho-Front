@@ -6,6 +6,8 @@ import { Observable } from "rxjs";
 import { PlatoUpdate } from "../dto/dish/PlatoUpdateDto";
 import { platoReadDto } from "../dto/dish/dishdto";
 import { environment,local } from "../env/env";
+import { Message } from "../dto/message";
+import { ingredienteDetail, ingredientePlato } from "../dto/dish/ingredientePlatoDto";
 
 @Injectable({
   providedIn: "root",
@@ -18,6 +20,10 @@ export class PlatoService {
   //Method to get all dishs
   getAllDishs(): Observable<MessageDTO<platoReadDto[]>> {
     return this.http.get<MessageDTO<platoReadDto[]>>(`${this.testURL}/getAll`);
+  } 
+  //Method to get all  ingredients
+  getIngredentDish(id: number): Observable<Message<ingredientePlato>> {
+    return this.http.get<Message<ingredientePlato>>(`${this.testURL}/${id}/getIngredientes`);
   }
 
   //Add a new dish

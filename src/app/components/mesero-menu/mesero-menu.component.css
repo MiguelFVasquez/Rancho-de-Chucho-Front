@@ -77,12 +77,12 @@
   }
   
   .available {
-    background-color:#076d7a;
+    background-color:#dc3545;
     color: white;
   }
   
   .not-available {
-    background-color: #dc3545;
+    background-color: #076d7a;;
     color: white;
   }
   

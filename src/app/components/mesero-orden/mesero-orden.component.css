@@ -237,7 +237,7 @@
   
   .orden-card-container {
     flex: 0 0 auto;
-    width: 250px; /* Ancho de cada orden */
+    width: 200px; /* Ancho de cada orden */
   }
   
   /* Paginador */

@@ -50,6 +50,9 @@ export class LoginComponent {
         this.router.navigate(['/staff/order']);
         return;
       }
+      else if(username === 'mesero@gmail.com' && password === 'mesero1234'){
+        this.router.navigate(['/mesero/order']);
+      }
       
       const dto: LoginDto = {
         username: username,
