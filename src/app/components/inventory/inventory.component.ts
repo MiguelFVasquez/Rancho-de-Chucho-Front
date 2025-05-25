@@ -82,11 +82,13 @@ export class InventoryComponent {
           this.units= response.respuesta
         }else{
           console.warn("La API no devolvió datos válidos.");
+          showAlert('Error al cargar las uniddes de medida.', 'error');
           this.units = [];
         }
       },
       error: (err) =>{
         console.error("Error en la petición:", err);
+        showAlert('Error al cargar las uniddes de medida.', 'error');
         this.units = [];
       }
     })
@@ -132,26 +134,26 @@ export class InventoryComponent {
   
       this.inventoryService.saveProduct(newProduct).subscribe({
         next: (response: MessageDTO) => {
-          console.log("✅ Respuesta del backend:", response);
+          console.log("Respuesta del backend:", response);
 
           // Invertimos la lógica, ahora 'error: true' significa éxito
           if (!response.error) {
             this.showModal = false;
-            showAlert(`✅ Producto agregado con ID: ${response.respuesta}`, 'success');
+            showAlert(`Producto agregado con ID: ${response.respuesta}`, 'success');
             this.loadProducts();
           } else {
-            showAlert('❌ Error al agregar el producto.', 'error');
+            showAlert('Error al agregar el producto.', 'error');
           }
         },
         error: (err) => {
           console.error("Error en la petición:", err);
           console.error("Respuesta detallada del backend:", err.error);
   
-          if (err.status === 400 && typeof err.error === 'object') {
+          if (err.status === 400 && typeof err.error === 'object' || err.status === 500 ) {
             const validationErrors = Object.entries(err.error)
               .map(([field, message]) => `${field}: ${message}`)
               .join('\n');
-            showAlert(`⚠️ Errores de validación:\n${validationErrors}`, 'error');
+            showAlert(`Errores de validación:\n${validationErrors}`, 'error');
           } else {
             showAlert(`Error de servidor: ${err.error.message || 'Desconocido'}`, 'error');
           }
@@ -184,9 +186,9 @@ export class InventoryComponent {
             }
             this.showEditModal = false;
             this.loadProducts();
-            showAlert('✅ Producto actualizado correctamente.', 'success');
+            showAlert('Producto actualizado correctamente.', 'success');
           } else {
-            showAlert('❌ Error al actualizar el producto.', 'error');
+            showAlert('Error al actualizar el producto.', 'error');
           }
         },
         error: () => {
@@ -216,10 +218,10 @@ export class InventoryComponent {
             this.products = this.products.filter(product => product.id !== id);
             this.selectedProduct = null;
             this.showDeleteModal = false;
-            showAlert('✅ Producto eliminado correctamente.', 'success');
+            showAlert('Producto eliminado correctamente.', 'success');
             this.loadProducts();
           } else {
-            showAlert('❌ Error al eliminar el producto.', 'error');
+            showAlert('Error al eliminar el producto.', 'error');
           }
         },
         error: () => {
@@ -254,9 +256,9 @@ export class InventoryComponent {
           next: (response) => {
             if (response.error) {  
               this.selectedStockProduct!.cantidadDisponible += this.stockQuantity;
-              showAlert(' ✅ Stock actualizado correctamente.', 'success');
+              showAlert('Stock actualizado correctamente.', 'success');
             } else {
-              showAlert('❌ Error al actualizar stock.', 'error');
+              showAlert('Error al actualizar stock.', 'error');
             }
             this.closeStockModal();
             this.loadProducts();

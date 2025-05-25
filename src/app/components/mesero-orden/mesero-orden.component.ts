@@ -93,10 +93,12 @@ export class MeseroOrdenComponent {
           this.dishesActivos=response.respuesta.filter(platoReadDto => platoReadDto.activo);
         } else {
           console.error('Error obteniendo platos:', response);
+          showAlert('Error al cargar los platos.', 'error');
         }
       },
       error: (err) => {
         console.error('Error en la petición:', err);
+        showAlert('Error en la comunicación con el servidor. ', 'error');
       },
     });
   }
@@ -111,6 +113,7 @@ export class MeseroOrdenComponent {
           this.agruparOrdenesPorEstado(); // Si estás agrupando por estado
         } else {
           console.error('Respuesta inválida del servidor');
+          showAlert('Respuesta inválida del servidor.', 'error');
         }
       },
       error: (err) => {
@@ -152,7 +155,7 @@ export class MeseroOrdenComponent {
   } 
 
   if (this.platillosSeleccionados.length === 0) {
-    alert("Debe agregar al menos un platillo.");
+    showAlert("Debe agregar al menos un platillo.", 'warning');
     return;
   }
 
@@ -184,16 +187,16 @@ export class MeseroOrdenComponent {
   this.orderService.createOrder(nuevaOrden).subscribe({
     next: (response) => {
       if (!response.error) {
-        alert('✅ Orden creada con éxito');
+        showAlert('Orden creada con éxito', 'success');
         this.cerrarModal();
         this.getAllOrders(); // Refrescar lista
       } else {
-        alert('❌ Error al crear la orden: ' + response.mensaje);
+        showAlert('Error al crear la orden: ' + response.mensaje, 'error');
       }
     },
     error: (err) => {
       console.error('Error al crear orden:', err);
-      alert('❌ Error en la comunicación con el servidor');
+      showAlert('Error en la comunicación con el servidor' + err, 'error');
     }
   });
 }

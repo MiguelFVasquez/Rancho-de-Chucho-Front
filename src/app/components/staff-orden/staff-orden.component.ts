@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ordenReadDto } from '../../dto/order/orderReadDto';
 import { OrderService } from '../../services/order.service';
+import { showAlert } from '../../dto/alert';
 
 @Component({
   selector: 'app-staff-orden',
@@ -55,6 +56,7 @@ export class StaffOrdenComponent implements OnInit{
           this.agruparOrdenesPorEstado(); // Si estás agrupando por estado
         } else {
           console.error('Respuesta inválida del servidor');
+          showAlert('Respuesta inválida del servidor.', 'error');
         }
       },
       error: (err) => {

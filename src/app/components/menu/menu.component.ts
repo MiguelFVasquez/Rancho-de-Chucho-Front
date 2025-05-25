@@ -280,7 +280,7 @@ export class MenuComponent implements OnInit {
           this.getAllDishes();
           this.closeAddDishModal();
           this.resetNewDishForm();
-            showAlert(`✅ Platillo agregado con ID: ${response.respuesta}`, 'success');
+            showAlert(`Platillo agregado con ID: ${response.respuesta}`, 'success');
         } else {
           showAlert('Error en el servidor: ' + response.respuesta, 'error');
         }
@@ -407,7 +407,7 @@ onSaveEdit(): void {
     this.platoService.editPlato(this.editingDishId, this.editingDish).subscribe({
       next: (response: MessageDTO<platoReadDto>) => {
         if (!response.error) {
-          showAlert(`✅ Plato actualizado correctamente: ${response.respuesta}`, 'success');
+          showAlert(`Plato actualizado correctamente: ${response.respuesta}`, 'success');
           this.getAllDishes();
           const index = this.dishes.findIndex(d => d.id === response.respuesta.id);
           if (index !== -1) {
@@ -434,12 +434,12 @@ onSaveEdit(): void {
         next: (response: MessageDTO<boolean>) => {
           if (!response.error && response.respuesta) {
             console.log(`Plato ${dish.nombre} eliminado correctamente.`);
-            showAlert(`✅ Plato ${dish.nombre} eliminado correctamente: ${response.respuesta}`, 'success');
+            showAlert(`Plato ${dish.nombre} eliminado correctamente: ${response.respuesta}`, 'success');
             this.dishes = this.dishes.filter((d) => d.id !== dish.id);
             this.onSearch(); // Actualizar lista
           } else {
             console.error('Error al eliminar el plato:', response);
-            showAlert('❌ Error al eliminar el plato.', 'error');
+            showAlert('Error al eliminar el plato.', 'error');
           }
         },
         error: (err) => {

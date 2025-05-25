@@ -67,18 +67,16 @@ export class LoginComponent {
             //  Redirigir al componente del mesero si se valida correctamente
             this.router.navigate(['/mesero']);
             
-          } else {
-            showAlert(response.mensaje);
           }
         },
         error: (err) => {
           console.error('Error de login:', err);
-          showAlert('Error al iniciar sesión. Inténtalo más tarde.');
+          showAlert('Error al iniciar sesión. Inténtalo más tarde.','error');
         }
       });
   
     } else {
-      showAlert('Por favor, completa todos los campos correctamente.');
+      showAlert('Por favor, completa todos los campos correctamente.', "error");
     }
   }
   

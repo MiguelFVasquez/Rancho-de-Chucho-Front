@@ -1,0 +1,33 @@
+.custom-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  animation: fadeInOut 3s ease-in-out forwards;
+  max-width: 300px;
+  text-align: center;
+}
+
+/* Estilo para alertas de éxito */
+.custom-alert.success {
+  background-color: #4CAF50; /* verde */
+}
+
+/* Estilo para alertas de error */
+.custom-alert.error {
+  background-color: #F44336; /* rojo */
+}
+
+/* Animación: entrada y salida */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
