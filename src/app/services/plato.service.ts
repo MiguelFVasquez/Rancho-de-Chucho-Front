@@ -19,24 +19,24 @@ export class PlatoService {
 
   //Method to get all dishs
   getAllDishs(): Observable<MessageDTO<platoReadDto[]>> {
-    return this.http.get<MessageDTO<platoReadDto[]>>(`${this.testURL}/getAll`);
+    return this.http.get<MessageDTO<platoReadDto[]>>(`${this.apiURL}/getAll`);
   } 
   //Method to get all  ingredients
   getIngredentDish(id: number): Observable<Message<ingredientePlato>> {
-    return this.http.get<Message<ingredientePlato>>(`${this.testURL}/${id}/getIngredientes`);
+    return this.http.get<Message<ingredientePlato>>(`${this.apiURL}/${id}/getIngredientes`);
   }
 
   //Add a new dish
   savePlato(newPlato: PlatoCreate): Observable<MessageDTO> {
-    return this.http.post<MessageDTO>(`${this.testURL}/save`, newPlato);
+    return this.http.post<MessageDTO>(`${this.apiURL}/save`, newPlato);
   }
   //Method to edit a dish
   editPlato(id: number, editDish: PlatoUpdate): Observable<MessageDTO> {
-    return this.http.put<MessageDTO>(`${this.testURL}/${id}/update`, editDish);
+    return this.http.put<MessageDTO>(`${this.apiURL}/${id}/update`, editDish);
   }
 
   //Method to delete a dish
   deletePlato(id: number): Observable<MessageDTO> {
-    return this.http.delete<MessageDTO>(`${this.testURL}/${id}/delete`);
+    return this.http.delete<MessageDTO>(`${this.apiURL}/${id}/delete`);
   }
 }

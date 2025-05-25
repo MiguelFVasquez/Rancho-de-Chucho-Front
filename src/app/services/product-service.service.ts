@@ -19,33 +19,33 @@ export class InventoryService {
 
   //Method to add a new product
   saveProduct(newProduct: NewProduct): Observable<MessageDTO> {
-    return this.http.post<MessageDTO>(`${this.testURL}/save`, newProduct);
+    return this.http.post<MessageDTO>(`${this.apiURL}/save`, newProduct);
   }
   //Method to edit a product
   editProduct(id: number, editProduct: editProduct): Observable<MessageDTO> {
     return this.http.put<MessageDTO>(
-      `${this.testURL}/${id}/update`,
+      `${this.apiURL}/${id}/update`,
       editProduct,
     );
   }
   //Method to edit stock of a producto
   addToStock(id: number, nueva_cantidad: number): Observable<MessageDTO> {
-    const url = `${this.testURL}/updateStock/${id}/${nueva_cantidad}/`;
+    const url = `${this.apiURL}/updateStock/${id}/${nueva_cantidad}/`;
     return this.http.put<MessageDTO>(url, {});
   }
 
   //Method to get all products
   getAllProducts(): Observable<MessageDTO<productDto[]>> {
-    return this.http.get<MessageDTO<productDto[]>>(`${this.testURL}/getAll`);
+    return this.http.get<MessageDTO<productDto[]>>(`${this.apiURL}/getAll`);
   }
 
   //Method to delete a product
   deleteProduct(id: number): Observable<MessageDTO> {
-    return this.http.delete<MessageDTO>(`${this.testURL}/${id}/delete`);
+    return this.http.delete<MessageDTO>(`${this.apiURL}/${id}/delete`);
   }
 
   //Method to get all of units
   getUnits(): Observable<Message<units[]>> {
-    return this.http.get<Message<units[]>>(`${this.testURL}/getUnidadMedida`);
+    return this.http.get<Message<units[]>>(`${this.apiURL}/getUnidadMedida`);
   }
 }

@@ -23,23 +23,23 @@ export class OrderService {
       pageNo: pageNo.toString(),
       pageSize: pageSize.toString()
     };
-    return this.http.get<OrdenResponseSet<ordenReadDto>>(`${this.testURL}/getOrdenes`, { params });
+    return this.http.get<OrdenResponseSet<ordenReadDto>>(`${this.apiURL}/getOrdenes`, { params });
   }
 
 
   //Method to create a new order
   createOrder(newOrder: OrdenCreateDto): Observable<Message> {
     return this.http.post<Message<OrdenCreateDto>>(
-      `${this.testURL}/open`,newOrder,);
+      `${this.apiURL}/open`,newOrder,);
   }
 
   // Método para cancelar una orden
   cancelarOrden(idOrden: number): Observable<Message> {
-    return this.http.put<Message>(`${this.testURL}/cancelar/${idOrden}`, {});
+    return this.http.put<Message>(`${this.apiURL}/cancelar/${idOrden}`, {});
   }
   //Method to change an order state
   changeOrderState(idOrden: number, newEstado:estado): Observable<Message<boolean>> {
-    return this.http.post<Message<boolean>>(`${this.testURL}/cambiarEstado/${idOrden}/${newEstado}`,{});
+    return this.http.post<Message<boolean>>(`${this.apiURL}/cambiarEstado/${idOrden}/${newEstado}`,{});
   }
 
 

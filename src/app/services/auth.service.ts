@@ -18,7 +18,7 @@ export class AuthService {
 
   loginMesero(login: LoginDto): Observable<Message<UsuarioReadDto>> {
     return this.http.post<Message<UsuarioReadDto>>(
-      `${this.testURL}/mesero`,
+      `${this.apiURL}/mesero`,
       login,
     );
   }

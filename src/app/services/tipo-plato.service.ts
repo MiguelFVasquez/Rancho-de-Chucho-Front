@@ -16,6 +16,6 @@ export class TipoPlatoService {
 
   //Method to get all kind of dishses
   getAllKindDishs(): Observable<MessageDTO<kindDishRead[]>> {
-    return this.http.get<MessageDTO<kindDishRead[]>>(`${this.testURL}/getAll`);
+    return this.http.get<MessageDTO<kindDishRead[]>>(`${this.apiURL}/getAll`);
   }
 }
