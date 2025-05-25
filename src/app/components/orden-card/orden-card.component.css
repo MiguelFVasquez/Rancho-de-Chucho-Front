@@ -128,6 +128,17 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
+  .change-state-btn{
+    margin-top: 1rem;
+    margin-left: 4px;
+    padding: 0.5rem 1rem;
+    background-color: #00a7bd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
   
   .detalles-btn:hover {
     background-color: #065f6a;

@@ -7,6 +7,7 @@ import { ordenReadDto } from "../dto/order/orderReadDto";
 import { OrdenCreateDto } from "../dto/order/createOrderDto";
 import { environment, local } from "../env/env";
 import { OrdenResponseSet } from "../dto/order/ordenResponseSet";
+import { estado } from "../dto/order/orderEnum";
 
 @Injectable({
   providedIn: "root",
@@ -36,4 +37,10 @@ export class OrderService {
   cancelarOrden(idOrden: number): Observable<Message> {
     return this.http.put<Message>(`${this.testURL}/cancelar/${idOrden}`, {});
   }
+  //Method to change an order state
+  changeOrderState(idOrden: number, newEstado:estado): Observable<Message<boolean>> {
+    return this.http.post<Message<boolean>>(`${this.testURL}/cambiarEstado/${idOrden}/${newEstado}`,{});
+  }
+
+
 }

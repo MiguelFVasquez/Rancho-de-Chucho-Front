@@ -5,24 +5,26 @@ import { CommonModule } from '@angular/common';
 import { ordenReadDto } from '../../dto/order/orderReadDto';
 import { OrderService } from '../../services/order.service';
 import { showAlert } from '../../dto/alert';
+import { estado } from '../../dto/order/orderEnum';
+import { DetailOrderComponent } from '../detail-orden/detail-orden.component';
 
 @Component({
   selector: 'app-staff-orden',
   standalone: true,
-  imports: [OrdenCardComponent,CommonModule],
+  imports: [OrdenCardComponent,CommonModule, DetailOrderComponent],
   templateUrl: './staff-orden.component.html',
   styleUrl: './staff-orden.component.css'
 })
 export class StaffOrdenComponent implements OnInit{
   //Orders
   ordenes:ordenReadDto[]=[]
-  ordenSeleccionada: any = null;
+  ordenSeleccionada: ordenReadDto | null= null;
    //status order
   ordenesPorEstado: { [estado: string]: any[] } = {};
-  estadosPermitidos: string[] = ['ESPERANDO', 'PROCESO']; 
+  estadosPermitidos: string[] = ['ESPERA', 'PROCESO']; 
   //Pagination
   paginaActual = 0;
-  ordenesPorPagina = 4;
+  ordenesPorPagina = 8;
   totalPaginas: number = 0;
   constructor(private orderService:OrderService){}
 
@@ -65,12 +67,12 @@ export class StaffOrdenComponent implements OnInit{
     });
   }
 
-//Order filters
-tieneOrdenesPermitidas(): boolean {
-  return this.estadosPermitidos.some(
-    estado => this.ordenesPorEstado[estado]?.length > 0
-  );
-}
+  //Order filters
+  tieneOrdenesPermitidas(): boolean {
+    return this.estadosPermitidos.some(
+      estado => this.ordenesPorEstado[estado]?.length > 0
+    );
+  }
 
 
   avanzarPagina() {
@@ -85,6 +87,32 @@ tieneOrdenesPermitidas(): boolean {
       this.paginaActual--;
       this.getAllOrders(); // cargar página anterior
     }
+  }
+  //----------------DETAIL AND CHANGE STATUS-----------
+
+  abrirDetalleOrden(orden: any) {
+    console.log('orden seleccionada: ', orden)
+    this.ordenSeleccionada = orden;
+  }
+  cancelarOrdenDesdePadre(id: number) {
+    console.log('Se canceló la orden con ID:', id);
+    this.ordenSeleccionada = null; // Cerrar el modal si quieres
+  }
+
+
+  onCambioEstado(event: { idOrden: number; nuevoEstado: estado }) {
+    this.orderService.changeOrderState(event.idOrden, event.nuevoEstado).subscribe({
+      next: () => {
+        showAlert(`Orden ${event.idOrden} pasó a ${event.nuevoEstado}`, 'success');
+        console.log('Orden a actualizar ', event.idOrden, 'cambiando a ',event.nuevoEstado );
+        this.getAllOrders();          // refresca los datos
+        this.ordenSeleccionada = null; // cierra el detalle
+      },
+      error: (err) => {
+        console.error('Error cambiando estado:', err);
+        showAlert('No se pudo cambiar el estado', 'error');
+      }
+    });
   }
 
 }

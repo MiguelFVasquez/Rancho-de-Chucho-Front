@@ -33,7 +33,13 @@
 
     <div class="botones-detalle">
       <button class="btn-cerrar" (click)="cerrarDetalle.emit()">Cerrar</button>
-
+         <!-- BOTÓN DE CAMBIO DE ESTADO SOLO PARA STAFF -->
+      <button
+        *ngIf="context==='staff' && (orden.estadoOrden==='ESPERA' || orden.estadoOrden==='PROCESO')"
+        class="btn-change-state"
+        (click)="avanzarEstado()">
+        {{ orden.estadoOrden==='ESPERA' ? 'Iniciar Proceso' : 'Marcar Finalizada' }}
+      </button>
       <button *ngIf="orden.estadoOrden === 'ESPERA' || orden.estadoOrden === 'PROCESO'"
         class="btn-cancelar"
         (click)="cancelarOrden()">

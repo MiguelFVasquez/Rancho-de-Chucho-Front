@@ -6,6 +6,7 @@ import { OrderService } from '../../services/order.service';
 import { MessageDTO } from '../../dto/messageDto';
 import { FormsModule } from '@angular/forms';
 import { ordenReadDto } from '../../dto/order/orderReadDto';
+import { estado } from '../../dto/order/orderEnum';
 
 @Component({
   selector: 'app-detail-order',
@@ -16,8 +17,13 @@ import { ordenReadDto } from '../../dto/order/orderReadDto';
 })
 export class DetailOrderComponent {
   @Input() orden!: ordenReadDto; // Ahora está tipado correctamente
+  @Input() context: 'mesero' | 'staff' = 'mesero';  //Contexto para saber cual modal mostrar
+
   @Output() cerrarDetalle = new EventEmitter<void>(); // Evento para cerrar modal
   @Output() ordenCancelada = new EventEmitter<number>(); // o el tipo que uses para el ID
+
+  /** Emite al padre que se quiere cambiar el estado */
+  @Output() cambioEstado = new EventEmitter<{ idOrden: number; nuevoEstado: estado }>();
 
   mostrarModalEdicion: boolean = false;
   ordenEnEdicion: any = null;
@@ -112,8 +118,25 @@ export class DetailOrderComponent {
  
   }
 
+    /** Lógica para avanzar de un estado permitido al siguiente */
+  avanzarEstado() {
+    console.log(' botón avanzarEstado clickeado, estado actual:', this.orden.estadoOrden);
 
+    let siguiente: estado | null = null;
 
+    if (this.orden.estadoOrden === estado.ESPERA) {
+      siguiente = estado.PROCESO;
+    } else if (this.orden.estadoOrden === estado.PROCESO) {
+      siguiente = estado.FINALIZADA;
+    }
+
+    if (siguiente) {
+      this.cambioEstado.emit({ idOrden: this.orden.idOrden, nuevoEstado: siguiente });
+      console.log('Emitiendo cambioEstado:', siguiente);
+    }
+  }
+
+  
   //Agrega el platillo a la orden
   agregarPlatillo() {
     this.platillosSeleccionados.push({ nombre: "", cantidad: 1 });
